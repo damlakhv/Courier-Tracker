@@ -24,6 +24,5 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/courier_tracking
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD:
-
 volumes:
   mysql_data:

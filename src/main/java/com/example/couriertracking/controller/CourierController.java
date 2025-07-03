@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequestMapping("/api/couriers")
-public class CourierTrackingController {
+public class CourierController {
 
     private final CourierService courierService;
 
     @Autowired
-    public CourierTrackingController(CourierService courierService) {
+    public CourierController(CourierService courierService) {
         this.courierService = courierService;
     }
 
