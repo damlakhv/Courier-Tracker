@@ -17,9 +17,6 @@ public class LocationLogController {
     @PostMapping
     public ResponseEntity<Void> addLocationLog(@RequestBody AddLocationLogRequest request) throws JsonProcessingException {
         locationLogService.addLocationLog(request);
-        locationLogService.logDistancesForStores(request.lat(), request.lng());
-        locationLogService.handleNewLocation(request.lat(), request.lng());
-
         return ResponseEntity.ok().build();
     }
 
