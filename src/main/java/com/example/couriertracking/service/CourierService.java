@@ -23,7 +23,7 @@ public class CourierService {
 
 
     public Courier addCourier(AddCourierRequest request) {
-        var courier = new Courier(request.name(), request.latitude(), request.longitude());
+        Courier courier = new Courier(request.name());
         return courierRepository.save(courier);
     }
 }

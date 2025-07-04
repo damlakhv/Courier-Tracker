@@ -1,6 +1,5 @@
 package com.example.couriertracking.controller;
 
-import com.example.couriertracking.model.AddStoreRequest;
 import com.example.couriertracking.model.AddStoresRequest;
 import com.example.couriertracking.model.Store;
 import com.example.couriertracking.service.StoreService;
@@ -35,7 +34,5 @@ public class StoreController {
     public ResponseEntity<List<Store>> addStores(@Validated @RequestBody AddStoresRequest request) {
         return ResponseEntity.ok(storeService.addStores(request));
     }
-
-
 
 }

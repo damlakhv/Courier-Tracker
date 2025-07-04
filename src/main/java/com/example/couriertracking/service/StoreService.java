@@ -1,6 +1,6 @@
 package com.example.couriertracking.service;
 
-import com.example.couriertracking.model.AddStoreRequest;
+
 import com.example.couriertracking.model.AddStoresRequest;
 import com.example.couriertracking.model.Store;
 import com.example.couriertracking.repository.StoreRepository;
@@ -20,10 +20,10 @@ public class StoreService {
         this.storeRepository = storeRepository;
     }
 
-    public Store addStore(AddStoreRequest request) {
-        var store= new Store(request.name(),request.lat(),request.lng());
-        return storeRepository.save(store);
-    }
+//    public Store addStore(AddStoreRequest request) {
+//        var store= new Store(request.name(),request.lat(),request.lng());
+//        return storeRepository.save(store);
+//    }
 
     public List<Store> addStores(AddStoresRequest request) {
         List<Store> stores = request.storeInfos().stream()
@@ -32,7 +32,6 @@ public class StoreService {
 
        return storeRepository.saveAll(stores);
     }
-
 
 }
 
