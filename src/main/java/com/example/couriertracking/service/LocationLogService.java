@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -101,6 +102,17 @@ public class LocationLogService {
             }
         }
         return totalDistance / 1000.0;
+    }
+
+    public List<LocationLogDto> fetchLogsByRange(Long courierId, LocalDateTime start, LocalDateTime end) {
+        List<LocationLog> logs = locationLogRepository.findByCourierIdAndTimestampBetweenOrderByTimestampAsc(courierId, start, end);
+
+        List<LocationLogDto> dtos = new ArrayList<>();
+        for (LocationLog log : logs) {
+            LocationLogDto dto = new LocationLogDto(log.getLat(), log.getLng(), log.getTimestamp());
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
 

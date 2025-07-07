@@ -1,6 +1,7 @@
 package com.example.couriertracking.controller;
 
 import com.example.couriertracking.model.AddLocationLogRequest;
+import com.example.couriertracking.model.LocationLogDto;
 import com.example.couriertracking.service.LocationLogService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/location-logs")
@@ -33,6 +35,16 @@ public class LocationLogController {
 
         double distance = locationLogService.getTotalDistanceBetweenTimes(courierId, start, end);
         return ResponseEntity.ok(distance);
+    }
+
+    @GetMapping("/by-range")
+    public ResponseEntity<List<LocationLogDto>> getLogsByRange(
+            @RequestParam Long courierId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+
+        List<LocationLogDto> logs = locationLogService.fetchLogsByRange(courierId, start, end);
+        return ResponseEntity.ok(logs);
     }
 
 }
