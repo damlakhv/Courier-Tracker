@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StoreVisitLogRepository extends JpaRepository<StoreVisitLog, Long> {
-    long countByCourierAndStoreAndEntryTimeAfter(Courier courier, Store store, LocalDateTime after);
 
     @Query("SELECT s.store FROM StoreVisitLog s " +
             "WHERE s.courier = :courier AND s.entryTime > :afterTime AND s.store IN :stores")

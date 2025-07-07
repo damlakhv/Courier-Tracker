@@ -81,4 +81,28 @@ public class LocationLogService {
             }
         }
     }
+
+    public double getTotalDistanceBetweenTimes(Long courierId, LocalDateTime start, LocalDateTime end) {
+        List<LocationLog> logs = locationLogRepository.findByCourierIdAndTimestampBetweenOrderByTimestampAsc(courierId, start, end);
+
+        if (logs.size() < 2) return 0.0;
+
+        double totalDistance = 0.0;
+        for (int i = 1; i < logs.size(); i++) {
+            LocationLog prev = logs.get(i - 1);
+            LocationLog curr = logs.get(i);
+
+            Double distance = storeRepository.calculateDistance(
+                    prev.getLat(), prev.getLng(), curr.getLat(), curr.getLng()
+            );
+
+            if (distance != null) {
+                totalDistance += distance;
+            }
+        }
+        return totalDistance / 1000.0;
+    }
+
+
+
 }
