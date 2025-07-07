@@ -4,7 +4,6 @@ import com.example.couriertracking.model.AddCourierRequest;
 import com.example.couriertracking.model.Courier;
 import com.example.couriertracking.service.CourierService;
 import jakarta.validation.constraints.Positive;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,6 @@ public class CourierController {
 
     private final CourierService courierService;
 
-    @Autowired
     public CourierController(CourierService courierService) {
         this.courierService = courierService;
     }

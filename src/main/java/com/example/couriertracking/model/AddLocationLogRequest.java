@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public record AddLocationLogRequest(
         @NotNull Long courierId,
-        @NotNull double lat,
-        @NotNull double lng,
+        @NotNull Double lat,
+        @NotNull Double lng,
         @NotNull LocalDateTime timestamp
 ) {}

@@ -3,7 +3,6 @@ package com.example.couriertracking.controller;
 import com.example.couriertracking.model.AddLocationLogRequest;
 import com.example.couriertracking.service.LocationLogService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/location-logs")
 public class LocationLogController {
 
-    @Autowired
-    private LocationLogService locationLogService;
+    private final LocationLogService locationLogService;
+
+    public LocationLogController (LocationLogService locationLogService) {
+        this.locationLogService = locationLogService;
+    }
 
     @PostMapping
     public ResponseEntity<Void> addLocationLog(@RequestBody AddLocationLogRequest request) throws JsonProcessingException {

@@ -1,6 +1,8 @@
 
 package com.example.couriertracking.service;
 
+import com.example.couriertracking.exception.CourierNotFoundException;
+import com.example.couriertracking.exception.StoreNotFoundException;
 import com.example.couriertracking.model.*;
 import com.example.couriertracking.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,9 @@ public class StoreVisitLogService {
 
     public void addStoreVisitLog(AddStoreVisitLogRequest request) {
         Courier courier = courierRepository.findById(request.courierId())
-                .orElseThrow(() -> new IllegalArgumentException("Courier not found"));
+                .orElseThrow(() -> new CourierNotFoundException(request.courierId()));
         Store store = storeRepository.findById(request.storeId())
-                .orElseThrow(() -> new IllegalArgumentException("Store not found"));
+                .orElseThrow(() -> new StoreNotFoundException(request.storeId()));
 
         StoreVisitLog log = new StoreVisitLog(courier, store, LocalDateTime.now());
         storeVisitLogRepository.save(log);

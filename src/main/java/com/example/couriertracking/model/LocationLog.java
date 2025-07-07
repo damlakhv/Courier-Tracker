@@ -22,7 +22,7 @@ public class LocationLog {
     public LocationLog() {
     }
 
-    public LocationLog(double lat, double lng, LocalDateTime timestamp, Courier courier) {
+    public LocationLog(Double lat, Double lng, LocalDateTime timestamp, Courier courier) {
         this.lat = lat;
         this.lng = lng;
         this.timestamp = timestamp;
@@ -31,10 +31,10 @@ public class LocationLog {
 
     public Long getId() { return id; }
 
-    public double getLat() { return lat; }
-    public void setLat(double lat) { this.lat = lat; }
-    public double getLng() { return lng; }
-    public void setLng(double lng) { this.lng = lng; }
+    public Double getLat() { return lat; }
+    public void setLat(Double lat) { this.lat = lat; }
+    public Double getLng() { return lng; }
+    public void setLng(Double lng) { this.lng = lng; }
     public LocalDateTime getTimestamp() { return timestamp; }
     public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
     public Courier getCourier() { return courier; }

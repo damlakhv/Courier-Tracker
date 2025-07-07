@@ -1,18 +1,28 @@
 package com.example.couriertracking.service;
 
+import com.example.couriertracking.exception.CourierNotFoundException;
+import com.example.couriertracking.exception.JsonConversionException;
 import com.example.couriertracking.model.*;
 import com.example.couriertracking.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+
+import org.slf4j.Logger;
 
 @Service
 public class LocationLogService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocationLogService.class);
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Autowired
     private LocationLogRepository locationLogRepository;
@@ -32,7 +42,7 @@ public class LocationLogService {
 
     public void addLocationLog(AddLocationLogRequest request) throws JsonProcessingException {
         Courier courier = courierRepository.findById(request.courierId())
-                .orElseThrow(() -> new IllegalArgumentException("Courier not found"));
+                .orElseThrow(() -> new CourierNotFoundException(request.courierId()));
 
         LocationLog log = new LocationLog(
                 request.lat(),
@@ -45,25 +55,30 @@ public class LocationLogService {
         List<Store> nearbyStores = getNearbyStores(request.lat(), request.lng());
 
         if (!nearbyStores.isEmpty()) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonStores = objectMapper.writeValueAsString(nearbyStores);
-            System.out.println("Nearby stores: " + jsonStores);
+            try {
+                String jsonStores = OBJECT_MAPPER.writeValueAsString(nearbyStores);
+                LOGGER.info("Nearby stores: {}", jsonStores);
+            } catch (JsonProcessingException e) {
+                throw new JsonConversionException("Failed to convert nearbyStores to JSON", e);
+            }
         }
 
         LocalDateTime oneMinuteAgo = request.timestamp().minusMinutes(1);
+        List<Store> visitedStores = storeVisitLogRepository.findVisitedStoresAfter(courier, oneMinuteAgo, nearbyStores);
+
+        Set<Long> visitedStoreIds = new HashSet<>();
+        for (Store s : visitedStores) {
+            visitedStoreIds.add(s.getId());
+        }
 
         for (Store nearbyStore : nearbyStores) {
-            long recentCount = storeVisitLogRepository.countByCourierAndStoreAndEntryTimeAfter(courier, nearbyStore, oneMinuteAgo);
-
-            if (recentCount == 0) {
+            if (!visitedStoreIds.contains(nearbyStore.getId())) {
                 StoreVisitLog visitLog = new StoreVisitLog(courier, nearbyStore, request.timestamp());
                 storeVisitLogRepository.save(visitLog);
-                System.out.println(" StoreVisitLog added for: " + nearbyStore.getName());
+                LOGGER.info("StoreVisitLog added for: {}", nearbyStore.getName());
             } else {
-                System.out.println(" Skipped duplicate visit for: " + nearbyStore.getName());
+                LOGGER.info("Skipped duplicate visit for: {}", nearbyStore.getName());
             }
         }
     }
-
-
 }
