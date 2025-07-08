@@ -3,7 +3,6 @@ package com.example.couriertracking.controller;
 import com.example.couriertracking.model.AddLocationLogRequest;
 import com.example.couriertracking.model.LocationLogDto;
 import com.example.couriertracking.service.LocationLogService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,7 @@ public class LocationLogController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addLocationLog(@RequestBody AddLocationLogRequest request) throws JsonProcessingException {
+    public ResponseEntity<Void> addLocationLog(@RequestBody AddLocationLogRequest request){
         locationLogService.addLocationLog(request);
         return ResponseEntity.ok().build();
     }

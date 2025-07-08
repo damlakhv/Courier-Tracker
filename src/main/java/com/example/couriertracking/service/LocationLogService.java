@@ -41,7 +41,7 @@ public class LocationLogService {
         return storeRepository.findNearbyStores(lat, lng);
     }
 
-    public void addLocationLog(AddLocationLogRequest request) throws JsonProcessingException {
+    public void addLocationLog(AddLocationLogRequest request) {
         Courier courier = courierRepository.findById(request.courierId())
                 .orElseThrow(() -> new CourierNotFoundException(request.courierId()));
 
@@ -84,7 +84,7 @@ public class LocationLogService {
     }
 
     public double getTotalDistanceBetweenTimes(Long courierId, LocalDateTime start, LocalDateTime end) {
-        List<LocationLog> logs = locationLogRepository.findByCourierIdAndTimestampBetweenOrderByTimestampAsc(courierId, start, end);
+        List<LocationLog> logs = locationLogRepository.findByCourierIdAndTimestampBetween(courierId, start, end);
 
         if (logs.size() < 2) return 0.0;
 
@@ -105,7 +105,7 @@ public class LocationLogService {
     }
 
     public List<LocationLogDto> fetchLogsByRange(Long courierId, LocalDateTime start, LocalDateTime end) {
-        List<LocationLog> logs = locationLogRepository.findByCourierIdAndTimestampBetweenOrderByTimestampAsc(courierId, start, end);
+        List<LocationLog> logs = locationLogRepository.findByCourierIdAndTimestampBetween(courierId, start, end);
 
         List<LocationLogDto> dtos = new ArrayList<>();
         for (LocationLog log : logs) {

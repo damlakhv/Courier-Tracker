@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface LocationLogRepository extends JpaRepository<LocationLog, Long> {
-    List<LocationLog> findByCourierIdAndTimestampBetweenOrderByTimestampAsc(Long courierId, LocalDateTime start, LocalDateTime end);
+    List<LocationLog> findByCourierIdAndTimestampBetween(Long courierId, LocalDateTime start, LocalDateTime end);
 }
