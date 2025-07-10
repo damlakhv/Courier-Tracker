@@ -5,6 +5,7 @@ import com.example.couriertracking.model.Courier;
 import com.example.couriertracking.repository.CourierRepository;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class CourierService {
 
@@ -23,4 +24,5 @@ public class CourierService {
         Courier courier = new Courier(request.name());
         return courierRepository.save(courier);
     }
+
 }

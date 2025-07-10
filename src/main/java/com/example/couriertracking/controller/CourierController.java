@@ -3,11 +3,11 @@ package com.example.couriertracking.controller;
 import com.example.couriertracking.model.AddCourierRequest;
 import com.example.couriertracking.model.Courier;
 import com.example.couriertracking.service.CourierService;
-import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @Validated
 @RestController
 @RequestMapping("/api/couriers")
@@ -20,9 +20,8 @@ public class CourierController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Courier> getCourier(@PathVariable @Positive Long id) {
-        Courier courier = courierService.getCourier(id);
-        return ResponseEntity.ok(courier);
+    public ResponseEntity<Courier> getCourier(@PathVariable Long id) {
+        return ResponseEntity.ok(courierService.getCourier(id));
     }
 
     @PostMapping
@@ -30,4 +29,6 @@ public class CourierController {
         Courier saved = courierService.addCourier(courier);
         return ResponseEntity.ok(saved);
     }
+
+
 }
