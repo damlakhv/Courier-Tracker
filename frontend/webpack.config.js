@@ -15,10 +15,21 @@ module.exports = {
     },
     module: {
         rules: [
+            // TypeScript/JSX
             {
                 test: /\.(ts|tsx)$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
+            },
+            // CSS loader
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
+            },
+            // Görseller (isteğe bağlı)
+            {
+                test: /\.(png|jpe?g|gif|svg)$/i,
+                type: 'asset/resource',
             },
         ],
     },
@@ -32,10 +43,10 @@ module.exports = {
         hot: true,
         proxy: [
             {
-                context: ['/api'],                  // hangi path’ler proxy’lensin
-                target: 'http://localhost:8080',    // Spring Boot uygulaman
+                context: ['/api'],
+                target: 'http://localhost:8080',
                 changeOrigin: true,
-                secure: false,                      // HTTPS değilse false
+                secure: false,
             },
         ],
     },

@@ -1,0 +1,6 @@
+.dashboard-container {
+    padding: 12px;
+}
+.dashboard-card {
+    min-height: 240px;
+}
