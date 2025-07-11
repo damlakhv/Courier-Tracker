@@ -25,4 +25,10 @@ public class StoreController {
         return ResponseEntity.ok(storeService.addStores(request));
     }
 
+    @GetMapping
+    public ResponseEntity<List<Store>> getAllStores() {
+        List<Store> stores = storeService.getAllStores();
+        return ResponseEntity.ok(stores);
+    }
+
 }

@@ -5,6 +5,8 @@ import com.example.couriertracking.model.Courier;
 import com.example.couriertracking.repository.CourierRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class CourierService {
@@ -23,6 +25,10 @@ public class CourierService {
     public Courier addCourier(AddCourierRequest request) {
         Courier courier = new Courier(request.name());
         return courierRepository.save(courier);
+    }
+
+    public List<Courier> getAllCouriers() {
+        return courierRepository.findAll();
     }
 
 }

@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @Validated
 @RestController
@@ -17,6 +19,11 @@ public class CourierController {
 
     public CourierController(CourierService courierService) {
         this.courierService = courierService;
+    }
+    @GetMapping
+    public ResponseEntity<List<Courier>> getAllCouriers() {
+        List<Courier> all = courierService.getAllCouriers();
+        return ResponseEntity.ok(all);
     }
 
     @GetMapping("/{id}")

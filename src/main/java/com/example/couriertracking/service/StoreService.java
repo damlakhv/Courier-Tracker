@@ -25,6 +25,9 @@ public class StoreService {
 
        return storeRepository.saveAll(stores);
     }
+    public List<Store> getAllStores() {
+        return storeRepository.findAll();
+    }
 
 }
 

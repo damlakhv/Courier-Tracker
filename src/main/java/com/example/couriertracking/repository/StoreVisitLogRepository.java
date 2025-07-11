@@ -16,4 +16,10 @@ public interface StoreVisitLogRepository extends JpaRepository<StoreVisitLog, Lo
                                        @Param("afterTime") LocalDateTime afterTime,
                                        @Param("stores") List<Store> stores);
 
+    @Query("SELECT l FROM StoreVisitLog l ORDER BY l.entryTime DESC")
+    List<StoreVisitLog> findAllOrderByEntryTimeDesc();
+
+    @Query("SELECT l FROM StoreVisitLog l WHERE l.store.id = :storeId ORDER BY l.entryTime DESC")
+    List<StoreVisitLog> findByStoreIdOrderByEntryTimeDesc(@Param("storeId") Long storeId);
+
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class StoreVisitLogService {
@@ -30,5 +31,13 @@ public class StoreVisitLogService {
 
         StoreVisitLog log = new StoreVisitLog(courier, store, LocalDateTime.now());
         storeVisitLogRepository.save(log);
+    }
+
+    public List<StoreVisitLog> getAllStoreVisitLogs() {
+        return storeVisitLogRepository.findAllOrderByEntryTimeDesc();
+    }
+
+    public List<StoreVisitLog> getStoreVisitLogsByStoreId(Long storeId) {
+        return storeVisitLogRepository.findByStoreIdOrderByEntryTimeDesc(storeId);
     }
 }
