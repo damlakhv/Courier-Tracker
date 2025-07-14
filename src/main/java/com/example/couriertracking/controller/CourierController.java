@@ -37,5 +37,19 @@ public class CourierController {
         return ResponseEntity.ok(saved);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCourier(@PathVariable Long id) {
+        courierService.deleteCourierById(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Courier> editCourier(
+            @PathVariable Long id,
+            @Validated @RequestBody AddCourierRequest req
+    ) {
+        Courier updated = courierService.updateCourier(id, req.name());
+        return ResponseEntity.ok(updated);
+    }
+
 
 }

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 
 export interface Courier {
     id: number;
@@ -11,7 +11,4 @@ const api = axios.create({
     timeout: 5000,
 });
 
-export const createCourier = async (payload: { name: string }): Promise<Courier> => {
-    const resp = await api.post<Courier>('/couriers', payload);
-    return resp.data;
-};
+
