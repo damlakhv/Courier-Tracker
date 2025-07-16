@@ -178,17 +178,16 @@ export default function Couriers() {
                         <Space size="middle" style={{ width: '100%', justifyContent: 'flex-end' }}>
                             <Button onClick={() => setAddModalVisible(false)}
                                     style={{
-                                        backgroundColor: 'rgb(115,94,140)',
                                         borderColor: 'rgb(115,94,140)',
-                                        color: '#fff'
+                                        backgroundColor: 'rgb(255,255,255)',
+                                        color: '#735e8c'
                                     }}>
                                 Cancel
                             </Button>
                             <Button type="primary" htmlType="submit"
                                     style={{
                                         backgroundColor: 'rgb(115,94,140)',
-                                        borderColor: 'rgb(115,94,140)',
-                                        color: '#fff'
+                                        color: '#ffffff'
                                     }}>
                                 Add
                             </Button>
@@ -223,9 +222,10 @@ export default function Couriers() {
                                     setCurrentCourier(null);
                                 }}
                                 style={{
-                                    backgroundColor: 'rgb(115,94,140)',
+
                                     borderColor: 'rgb(115,94,140)',
-                                    color: '#fff'
+                                    backgroundColor: 'rgb(255,255,255)',
+                                    color: '#735e8c'
                                 }}
                             >
                                 Cancel
@@ -236,7 +236,7 @@ export default function Couriers() {
                                 style={{
                                     backgroundColor: 'rgb(115,94,140)',
                                     borderColor: 'rgb(115,94,140)',
-                                    color: '#fff'
+                                    color: '#ffffff'
                                 }}
                             >Edit
                             </Button>

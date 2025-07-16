@@ -30,5 +30,19 @@ public class StoreController {
         List<Store> stores = storeService.getAllStores();
         return ResponseEntity.ok(stores);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<Store> updateStore(
+            @PathVariable Long id,
+            @Validated @RequestBody AddStoresRequest.StoreInfo info
+    ) {
+        Store updated = storeService.updateStore(id, info);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStore(@PathVariable Long id) {
+        storeService.deleteStore(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

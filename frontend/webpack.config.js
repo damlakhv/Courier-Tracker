@@ -15,18 +15,15 @@ module.exports = {
     },
     module: {
         rules: [
-            // TypeScript/JSX
             {
                 test: /\.(ts|tsx)$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
-            // CSS loader
             {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
             },
-            // Görseller (isteğe bağlı)
             {
                 test: /\.(png|jpe?g|gif|svg)$/i,
                 type: 'asset/resource',
@@ -35,6 +32,7 @@ module.exports = {
     },
     devtool: 'inline-source-map',
     devServer: {
+        historyApiFallback: true,
         static: {
             directory: path.resolve(__dirname, 'public'),
         },

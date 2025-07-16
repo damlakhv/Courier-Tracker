@@ -3,6 +3,7 @@ import { Row, Col, Card, List, Avatar, Spin, Alert, Typography, Button, Modal, F
 import { UserOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import './Page.css';
+
 const { Title, Text } = Typography;
 
 interface Store {
@@ -23,7 +24,7 @@ export default function Stores() {
 
     const fetchStores = () => {
         setLoading(true);
-        axios.get<Store[]>('api/stores')
+        axios.get<Store[]>('/api/stores')
             .then(res=> setStores(res.data))
             .catch(err=> setError(err.message ||'Server Error'))
             .finally(()=> setLoading(false))
@@ -39,7 +40,7 @@ export default function Stores() {
     }
     const handleAddStore = (values: Omit<Store, 'id'>) => {
         axios.post<Store[]>('/api/stores', {
-            storeInfos: [ values ]  // controller’ın istediği yapı
+            storeInfos: [ values ]
         })
             .then(() => {
                 message.success('Store added successfully');
@@ -51,7 +52,41 @@ export default function Stores() {
             });
     };
 
-    //will be added edit and delete operations
+    const showEditModal = (s : Store) =>{
+        setCurrentStore(s);
+        form.setFieldsValue({name:s.name, lat: s.lat, lng: s.lng});
+        setEditModalVisible(true);
+    }
+
+    const handleEdit = () => {
+        if (!currentStore) return;
+        form
+            .validateFields()
+            .then(values =>
+                axios.put<Store>(`/api/stores/${currentStore.id}`, values)
+            )
+            .then(() => {
+                message.success('Store updated');
+                fetchStores();
+                setEditModalVisible(false);
+                setCurrentStore(null);
+            })
+            .catch(err => {
+                message.error(err.response?.data?.message || 'Failed to update store');
+            });
+    };
+
+    const handleDelete = (id: number) => {
+        axios.delete(`/api/stores/${id}`)
+            .then(()=> {
+                message.success('Store deleted');
+                fetchStores();
+            })
+            .catch(()=> {
+                message.error('Failed to delete store');
+            });
+    };
+
 
     if (loading) {
         return <Spin tip="Loading couriers..." style={{ margin: '100px auto', display: 'block' }} />;
@@ -91,7 +126,32 @@ export default function Stores() {
                 bordered
                 renderItem={s=>(
                     <List.Item actions={[
-
+                        <Button
+                            key="edit"
+                            type="text"
+                            icon={<EditOutlined/>}
+                            onClick={()=> showEditModal(s)}
+                        />,
+                        <Popconfirm
+                            key="delete"
+                            title="Are you sure to delete this store?"
+                            okText="Yes"
+                            cancelText="No"
+                            onConfirm={() => handleDelete(s.id)}
+                            okButtonProps={{ style: {
+                                    backgroundColor: 'rgb(115,94,140)',
+                                    borderColor: 'rgb(115,94,140)',
+                                    color: '#fff'
+                                } }}
+                            cancelButtonProps={{
+                                style: {
+                                    borderColor: 'rgb(115,94,140)',
+                                    color: 'rgb(115,94,140)'
+                                }
+                            }}
+                        >
+                            <Button type="text" icon={<DeleteOutlined />} />
+                        </Popconfirm>
                     ]}>
                         <List.Item.Meta
                             avatar={<Avatar icon={<UserOutlined />} />}
@@ -109,18 +169,24 @@ export default function Stores() {
 
             />
             <Modal
-                title="Add New Store"
-                open={isAddModalVisible}
-                onCancel={() => setAddModalVisible(false)}
+                title={currentStore ? 'Edit Store' : 'Add New Store'}
+                open={currentStore ? isEditModalVisible : isAddModalVisible}
+                onCancel={() => {
+                    setAddModalVisible(false);
+                    setEditModalVisible(false);
+                    setCurrentStore(null);
+                }}
                 footer={null}
-                destroyOnHidden
+                destroyOnClose
             >
                 <Form
                     form={form}
                     layout="vertical"
-                    name="add_store_form"
-                    initialValues={{ name: '', lat: null, lng: null }}
-                    onFinish={handleAddStore}
+                    name={currentStore ? 'edit_store_form' : 'add_store_form'}
+                    onFinish={currentStore ? handleEdit : handleAddStore}
+                    initialValues={
+                        currentStore ?? { name: '', lat: null, lng: null }
+                    }
                 >
                     <Form.Item
                         name="name"
@@ -149,11 +215,15 @@ export default function Stores() {
                     <Form.Item>
                         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
                             <Button
-                                onClick={() => setAddModalVisible(false)}
+                                onClick={() => {
+                                    setAddModalVisible(false);
+                                    setEditModalVisible(false);
+                                    setCurrentStore(null);
+                                }}
                                 style={{
-                                    backgroundColor: 'rgb(115,94,140)',
                                     borderColor: 'rgb(115,94,140)',
-                                    color: '#fff'
+                                    backgroundColor: 'rgb(255,255,255)',
+                                    color: '#735e8c'
                                 }}
                             >
                                 Cancel
@@ -167,15 +237,12 @@ export default function Stores() {
                                     color: '#fff'
                                 }}
                             >
-                                Add Store
+                                {currentStore ? 'Save' : 'Add'}
                             </Button>
                         </Space>
                     </Form.Item>
                 </Form>
             </Modal>
-
-
         </div>
-
     );
 }

@@ -1,6 +1,7 @@
 package com.example.couriertracking.service;
 
 
+import com.example.couriertracking.exception.StoreNotFoundException;
 import com.example.couriertracking.model.AddStoresRequest;
 import com.example.couriertracking.model.Store;
 import com.example.couriertracking.repository.StoreRepository;
@@ -28,6 +29,23 @@ public class StoreService {
     public List<Store> getAllStores() {
         return storeRepository.findAll();
     }
+
+    public Store updateStore(Long id, AddStoresRequest.StoreInfo info) {
+        Store s = storeRepository.findById(id)
+                .orElseThrow(() -> new StoreNotFoundException(id));
+        s.setName(info.name());
+        s.setLat(info.lat());
+        s.setLng(info.lng());
+        return storeRepository.save(s);
+    }
+
+    public void deleteStore(Long id) {
+        if (!storeRepository.existsById(id)) {
+            throw new StoreNotFoundException(id);
+        }
+        storeRepository.deleteById(id);
+    }
+
 
 }
 
