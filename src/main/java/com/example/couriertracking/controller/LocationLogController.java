@@ -2,6 +2,7 @@ package com.example.couriertracking.controller;
 
 import com.example.couriertracking.model.AddLocationLogRequest;
 import com.example.couriertracking.model.LocationLogDto;
+import com.example.couriertracking.model.CourierLastLocationDto;
 import com.example.couriertracking.service.LocationLogService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,12 @@ public class LocationLogController {
 
         List<LocationLogDto> logs = locationLogService.fetchLogsByRange(courierId, start, end);
         return ResponseEntity.ok(logs);
+    }
+
+    @GetMapping("/last-locations")
+    public ResponseEntity<List<CourierLastLocationDto>> getAllCouriersLastLocations() {
+        List<CourierLastLocationDto> lastLocations = locationLogService.fetchAllCouriersLastLocations();
+        return ResponseEntity.ok(lastLocations);
     }
 
 }

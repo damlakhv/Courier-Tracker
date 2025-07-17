@@ -3,7 +3,8 @@ import {Row, Col, List, Avatar, Spin, Alert, Typography, Button, message, Popcon
 import {UserOutlined, PlusOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import './Page.css';
-import StoreUpsertModal, { Store } from '../components/StoreUpsertModal';
+import { Store } from '../types/store';
+import StoreUpsertModal from '../components/StoreUpsertModal';
 
 const { Title, Text } = Typography;
 
@@ -37,6 +38,8 @@ export default function Stores() {
             await axios.post('/api/stores', { storeInfos: [values] });
             notification.success({
                 message: 'Store Added',
+                placement: 'topRight',
+                duration: 5,
                 description: `Store “${values.name}” was added successfully.`,
             });
             fetchStores();
@@ -44,6 +47,8 @@ export default function Stores() {
         } catch (err: any) {
             notification.error({
                 message: 'Add Failed',
+                placement: 'topRight',
+                duration: 5,
                 description:
                     err.response?.data?.message ||
                     'There was an error adding the store. Please try again.',

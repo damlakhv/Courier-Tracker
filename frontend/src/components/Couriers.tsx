@@ -3,7 +3,8 @@ import {Row, Col, List, Avatar, Spin, Alert, Typography, Button, message, Popcon
 import { UserOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import './Page.css';
-import CourierUpsertModal, { Courier } from '../components/CourierUpsertModal';
+import { Courier } from '../types/courier';
+import CourierUpsertModal from '../components/CourierUpsertModal';
 
 const { Title, Text } = Typography;
 

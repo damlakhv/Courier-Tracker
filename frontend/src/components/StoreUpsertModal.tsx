@@ -1,12 +1,6 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Button, Space } from 'antd';
-
-export interface Store {
-    id: number;
-    name: string;
-    lat: number;
-    lng: number;
-}
+import { Store } from '../types/store';
 
 interface Props {
     visible: boolean;

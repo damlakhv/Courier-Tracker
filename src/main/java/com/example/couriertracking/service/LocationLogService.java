@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.example.couriertracking.model.CourierLastLocationDto;
 
 import org.slf4j.Logger;
 
@@ -118,4 +119,7 @@ public class LocationLogService {
                 .collect(Collectors.toList());
     }
 
+    public List<CourierLastLocationDto> fetchAllCouriersLastLocations() {
+        return locationLogRepository.findAllCouriersLastLocations();
+    }
 }

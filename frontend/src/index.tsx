@@ -5,10 +5,9 @@ import App from './App';
 import 'antd/dist/reset.css';
 import {notification} from "antd";
 
-
 notification.config({
     placement: 'topRight',
-    duration: 5,
+    duration: 5
 });
 
 const root = createRoot(document.getElementById('root')!);

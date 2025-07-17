@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Button, Space } from 'antd';
-
-export interface Courier {
-    id: number;
-    name: string;
-}
+import { Courier } from '../types/courier';
 
 interface Props {
     visible: boolean;
