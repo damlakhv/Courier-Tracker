@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import 'antd/dist/reset.css';
-import {
-    DashboardOutlined,
-    UserOutlined,
-    ShopOutlined,
-    HistoryOutlined,
-    EnvironmentOutlined
-} from '@ant-design/icons';
+import {DashboardOutlined, UserOutlined, ShopOutlined, HistoryOutlined, EnvironmentOutlined} from '@ant-design/icons';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import Dashboard from './components/Dashboard';
@@ -32,7 +26,7 @@ export default function App() {
     ];
 
     return (
-        <Layout style={{ minHeight: '100vh' }}>
+        <Layout style={{ minHeight: '100vh', display: 'flex', flexDirection: 'row' }}>
             <Sider
                 collapsible
                 collapsed={collapsed}
@@ -42,7 +36,6 @@ export default function App() {
                 width={200}
                 style={{ background: 'rgba(74,35,104,0.3)' }}
                 trigger={
-
                     collapsed
                         ? <MenuUnfoldOutlined style={{ fontSize: 18, color: '#8c7fa5' }} />
                         : <MenuFoldOutlined   style={{ fontSize: 18, color: '#8c7fa5' }} />
@@ -56,12 +49,18 @@ export default function App() {
                     selectedKeys={[pathname]}
                     items={menuItems}
                     onClick={({ key }) => navigate(key)}
-                    style={{ height: '100%', border: 'none', background: 'transparent' }}
+                    style={{ height: 'auto', border: 'none', background: 'transparent' }}
                 />
             </Sider>
-
-            <Layout>
-                <Content style={{ margin: 16, padding: 24, background: '#fff' }}>
+            <Layout style={{ flex: 1, minHeight: 0 }}>
+                <Content style={{
+                    margin: 16,
+                    padding: 24,
+                    background: '#fff',
+                    overflow: 'auto',
+                    minHeight: 0,
+                    height: 'auto'
+                }}>
                     <Routes>
                         <Route path="/" element={<Dashboard />} />
                         <Route path="/couriers" element={<Couriers />} />

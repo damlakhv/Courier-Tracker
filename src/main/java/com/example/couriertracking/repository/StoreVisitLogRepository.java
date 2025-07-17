@@ -22,4 +22,5 @@ public interface StoreVisitLogRepository extends JpaRepository<StoreVisitLog, Lo
     @Query("SELECT l FROM StoreVisitLog l WHERE l.store.id = :storeId ORDER BY l.entryTime DESC")
     List<StoreVisitLog> findByStoreIdOrderByEntryTimeDesc(@Param("storeId") Long storeId);
 
+    long countByEntryTimeBetween(LocalDateTime start, LocalDateTime end);
 }

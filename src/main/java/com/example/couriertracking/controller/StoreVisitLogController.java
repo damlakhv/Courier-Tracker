@@ -36,5 +36,11 @@ public class StoreVisitLogController {
         return ResponseEntity.ok(logs);
     }
 
+    @GetMapping("/count-today")
+    public ResponseEntity<Long> getTodayVisitCount() {
+        long count = storeVisitLogService.countVisitsToday();
+        return ResponseEntity.ok(count);
+    }
+
 
 }

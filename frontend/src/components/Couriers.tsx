@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {Row, Col, List, Avatar, Spin, Alert, Typography, Button, Modal, Form, Input, Space, message, Popconfirm} from 'antd';
-import {UserOutlined, PlusOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
+import {Row, Col, List, Avatar, Spin, Alert, Typography, Button, message, Popconfirm, notification} from 'antd';
+import { UserOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import './Page.css';
+import CourierUpsertModal, { Courier } from '../components/CourierUpsertModal';
 
 const { Title, Text } = Typography;
-
-interface Courier {
-    id: number;
-    name: string;
-}
 
 export default function Couriers() {
     const [couriers, setCouriers] = useState<Courier[]>([]);
@@ -17,12 +13,12 @@ export default function Couriers() {
     const [error, setError] = useState<string>();
     const [isAddModalVisible, setAddModalVisible] = useState(false);
     const [isEditModalVisible, setEditModalVisible] = useState(false);
-    const [currentCourier, setCurrentCourier] = useState<Courier | null>(null);
-    const [form] = Form.useForm();
+    const [currentCourier, setCurrentCourier] = useState<Courier | undefined>(undefined);
 
     const fetchCouriers = () => {
         setLoading(true);
-        axios.get<Courier[]>('/api/couriers')
+        axios
+            .get<Courier[]>('/api/couriers')
             .then(res => setCouriers(res.data))
             .catch(err => setError(err.message || 'Server error'))
             .finally(() => setLoading(false));
@@ -33,53 +29,68 @@ export default function Couriers() {
     }, []);
 
     const showAddModal = () => {
-        form.resetFields();
+        setCurrentCourier(undefined);
         setAddModalVisible(true);
     };
-
-    const handleAdd = () => {
-        form.validateFields()
-            .then(values => axios.post<Courier>('/api/couriers', values))
-            .then(() => {
-                message.success('Courier added successfully');
-                fetchCouriers();
-                setAddModalVisible(false);
-            })
-            .catch(err => {
-                message.error(err.response?.data?.message || 'Failed to add courier');
+    const handleAdd = async (values: Omit<Courier, 'id'>) => {
+        try {
+            await axios.post('/api/couriers', values);
+            notification.success({
+                message: 'Courier Added',
+                description: `The courier “${values.name}” was added successfully.`,
             });
+            fetchCouriers();
+            setAddModalVisible(false);
+        } catch (err: any) {
+            notification.error({
+                message: 'Add Failed',
+                description:
+                    err.response?.data?.message ||
+                    'There was an error adding the courier. Please try again.',
+            });
+        }
     };
 
     const showEditModal = (c: Courier) => {
         setCurrentCourier(c);
-        form.setFieldsValue({ name: c.name });
         setEditModalVisible(true);
     };
 
-    const handleEdit = () => {
+    const handleEdit = async (values: Omit<Courier, 'id'> | Courier) => {
         if (!currentCourier) return;
-        form.validateFields()
-            .then(values => axios.put<Courier>(`/api/couriers/${currentCourier.id}`, values))
-            .then(() => {
-                message.success('Courier updated');
-                fetchCouriers();
-                setEditModalVisible(false);
-                setCurrentCourier(null);
-            })
-            .catch(err => {
-                message.error(err.response?.data?.message || 'Failed to update courier');
+        try {
+            await axios.put(`/api/couriers/${currentCourier.id}`, { name: values.name });
+            notification.success({
+                message: 'Courier Updated',
+                description: `Courier with ID ${currentCourier.id} was updated successfully.`,
             });
+            fetchCouriers();
+            setEditModalVisible(false);
+            setCurrentCourier(undefined);
+        } catch (err: any) {
+            notification.error({
+                message: 'Update Failed',
+                description:
+                    err.response?.data?.message ||
+                    'There was an error updating the courier.',
+            });
+        }
     };
 
-    const handleDelete = (id: number) => {
-        axios.delete(`/api/couriers/${id}`)
-            .then(() => {
-                message.success('Courier deleted');
-                fetchCouriers();
-            })
-            .catch(() => {
-                message.error('Failed to delete courier');
+    const handleDelete = async (id: number) => {
+        try {
+            await axios.delete(`/api/couriers/${id}`);
+            notification.success({
+                message: 'Courier Deleted',
+                description: `Courier with ID ${id} was deleted successfully.`,
             });
+            fetchCouriers();
+        } catch {
+            notification.error({
+                message: 'Delete Failed',
+                description: 'There was an error deleting the courier.',
+            });
+        }
     };
 
     if (loading) {
@@ -121,23 +132,20 @@ export default function Couriers() {
                 renderItem={c => (
                     <List.Item
                         actions={[
-                            <Button
-                                key="edit"
-                                type="text"
-                                icon={<EditOutlined />}
-                                onClick={() => showEditModal(c)}
-                            />,
+                            <Button key="edit" type="text" icon={<EditOutlined />} onClick={() => showEditModal(c)} />,
                             <Popconfirm
                                 key="delete"
                                 title="Are you sure to delete this courier?"
                                 okText="Yes"
                                 cancelText="No"
                                 onConfirm={() => handleDelete(c.id)}
-                                okButtonProps={{ style: {
+                                okButtonProps={{
+                                    style: {
                                         backgroundColor: 'rgb(115,94,140)',
                                         borderColor: 'rgb(115,94,140)',
                                         color: '#fff'
-                                    } }}
+                                    }
+                                }}
                                 cancelButtonProps={{
                                     style: {
                                         borderColor: 'rgb(115,94,140)',
@@ -145,8 +153,7 @@ export default function Couriers() {
                                     }
                                 }}
                             >
-                                <Button type="text" icon={<DeleteOutlined />}
-                                />
+                                <Button type="text" icon={<DeleteOutlined />} />
                             </Popconfirm>
                         ]}
                     >
@@ -159,91 +166,20 @@ export default function Couriers() {
                 )}
             />
 
-            <Modal
-                title="Add New Courier"
-                open={isAddModalVisible}
+            <CourierUpsertModal
+                visible={isAddModalVisible}
                 onCancel={() => setAddModalVisible(false)}
-                footer={null}
-                destroyOnHidden
-            >
-                <Form form={form} layout="vertical" name="add_courier_form" onFinish={handleAdd}>
-                    <Form.Item
-                        name="name"
-                        label="Name"
-                        rules={[{ required: true, message: 'Please input the courier name!' }]}
-                    >
-                        <Input placeholder="Enter courier name" />
-                    </Form.Item>
-                    <Form.Item>
-                        <Space size="middle" style={{ width: '100%', justifyContent: 'flex-end' }}>
-                            <Button onClick={() => setAddModalVisible(false)}
-                                    style={{
-                                        borderColor: 'rgb(115,94,140)',
-                                        backgroundColor: 'rgb(255,255,255)',
-                                        color: '#735e8c'
-                                    }}>
-                                Cancel
-                            </Button>
-                            <Button type="primary" htmlType="submit"
-                                    style={{
-                                        backgroundColor: 'rgb(115,94,140)',
-                                        color: '#ffffff'
-                                    }}>
-                                Add
-                            </Button>
-                        </Space>
-                    </Form.Item>
-                </Form>
-            </Modal>
-
-            <Modal
-                title="Edit Courier"
-                open={isEditModalVisible}
+                onSubmit={handleAdd}
+            />
+            <CourierUpsertModal
+                visible={isEditModalVisible}
+                initialValues={currentCourier}
                 onCancel={() => {
                     setEditModalVisible(false);
-                    setCurrentCourier(null);
+                    setCurrentCourier(undefined);
                 }}
-                footer={null}
-                destroyOnHidden
-            >
-                <Form form={form} layout="vertical" name="edit_courier_form" onFinish={handleEdit}>
-                    <Form.Item
-                        name="name"
-                        label="Name"
-                        rules={[{ required: true, message: 'Please input the courier name!' }]}
-                    >
-                        <Input placeholder="Enter new name" />
-                    </Form.Item>
-                    <Form.Item>
-                        <Space size="middle" style={{ width: '100%', justifyContent: 'flex-end' }}>
-                            <Button
-                                onClick={() => {
-                                    setEditModalVisible(false);
-                                    setCurrentCourier(null);
-                                }}
-                                style={{
-
-                                    borderColor: 'rgb(115,94,140)',
-                                    backgroundColor: 'rgb(255,255,255)',
-                                    color: '#735e8c'
-                                }}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                style={{
-                                    backgroundColor: 'rgb(115,94,140)',
-                                    borderColor: 'rgb(115,94,140)',
-                                    color: '#ffffff'
-                                }}
-                            >Edit
-                            </Button>
-                        </Space>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                onSubmit={handleEdit}
+            />
         </div>
     );
 }

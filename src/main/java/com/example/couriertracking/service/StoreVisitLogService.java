@@ -8,6 +8,7 @@ import com.example.couriertracking.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,5 +40,12 @@ public class StoreVisitLogService {
 
     public List<StoreVisitLog> getStoreVisitLogsByStoreId(Long storeId) {
         return storeVisitLogRepository.findByStoreIdOrderByEntryTimeDesc(storeId);
+    }
+
+    public long countVisitsToday() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = today.atStartOfDay();
+        LocalDateTime end = today.plusDays(1).atStartOfDay();
+        return storeVisitLogRepository.countByEntryTimeBetween(start, end);
     }
 }
