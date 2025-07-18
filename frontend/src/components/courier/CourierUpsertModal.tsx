@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Button, Space } from 'antd';
-import { Courier } from '../types/courier';
+import { Courier } from '../../types/courier';
 
 interface Props {
     visible: boolean;
@@ -26,10 +26,10 @@ const CourierUpsertModal: React.FC<Props> = ({
     return (
         <Modal
             title={initialValues ? 'Edit Courier' : 'Add New Courier'}
-            visible={visible}
+            open={visible}
             onCancel={onCancel}
             footer={null}
-            destroyOnClose
+            destroyOnHidden
         >
             <Form
                 form={form}

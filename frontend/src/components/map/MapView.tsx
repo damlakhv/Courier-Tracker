@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {Card, Row, Col, Spin, Alert, Modal, Form, DatePicker, Button,} from 'antd';
+import { Card, Row, Col, Spin, Alert } from 'antd';
 import axios from 'axios';
-import useGoogleMapsLoader from '../useGoogleMapsLoader';
+import useGoogleMapsLoader from '../../useGoogleMapsLoader';
 import MarkersMap from './MarkersMap';
-import { Store } from '../types/store';
-import { CourierLastLocation } from '../types/courierLastLocation';
-import { CourierLog } from '../types/courierLog';
+import MapRangeModal from './MapRangeModal';
+import { Store } from '../../types/store';
+import { CourierLastLocation } from '../../types/courierLastLocation';
+import { CourierLog } from '../../types/courierLog';
 
 export default function MapView() {
     const apiKey = '';
@@ -14,6 +15,7 @@ export default function MapView() {
     const [stores, setStores] = useState<Store[]>([]);
     const [couriers, setCouriers] = useState<CourierLastLocation[]>([]);
     const [logs, setLogs] = useState<CourierLog[]>([]);
+    const [totalDistance, setTotalDistance] = useState<number | null>(null);
     const [selectedCourier, setSelectedCourier] = useState<number | null>(null);
     const [isModalVisible, setModalVisible] = useState(false);
 
@@ -46,26 +48,39 @@ export default function MapView() {
     const onFinishRange = (values: any) => {
         if (selectedCourier == null) return;
         const [start, end] = values.range;
-        axios
-            .get<CourierLog[]>('/api/location-logs/by-range', {
+
+        setLoading(true);
+        Promise.all([
+            axios.get<CourierLog[]>('/api/location-logs/by-range', {
                 params: {
                     courierId: selectedCourier,
                     start: start.toISOString(),
                     end: end.toISOString(),
                 },
-            })
-            .then(res => {
-                setLogs(res.data);
+            }),
+            axios.get<number>('/api/location-logs/total-distance', {
+                params: {
+                    courierId: selectedCourier,
+                    start: start.toISOString(),
+                    end: end.toISOString(),
+                },
+            }),
+        ])
+            .then(([logsRes, distRes]) => {
+                setLogs(logsRes.data);
+                setTotalDistance(distRes.data);
                 setModalVisible(false);
+                setLoading(false);
             })
             .catch(err => {
-                console.error('LOG FETCH ERROR:', err);
+                console.error('FETCH ERROR:', err);
                 setModalVisible(false);
+                setLoading(false);
             });
     };
 
     if (mapsError) {
-        return <Alert type="error" message={`Map could not loaded: ${mapsError}`} />;
+        return <Alert type="error" message={`Map could not load: ${mapsError}`} />;
     }
 
     return (
@@ -84,6 +99,7 @@ export default function MapView() {
                                 stores={stores}
                                 couriers={couriers}
                                 logs={logs}
+                                totalDistance={totalDistance}
                                 onCourierClick={onCourierMarkerClick}
                             />
                         ) : (
@@ -93,36 +109,12 @@ export default function MapView() {
                 </Col>
             </Row>
 
-            <Modal
-                title={`Courier #${selectedCourier} Route by Range`}
+            <MapRangeModal
                 visible={isModalVisible}
+                selectedCourier={selectedCourier}
                 onCancel={() => setModalVisible(false)}
-                footer={null}
-            >
-                <Form onFinish={onFinishRange}>
-                    <Form.Item
-                        name="range"
-                        rules={[{ required: true, message: 'Please select date & time range' }]}
-                    >
-                        <DatePicker.RangePicker
-                            showTime={{ format: 'HH:mm' }}
-                            format="YYYY-MM-DD HH:mm"
-                            style={{ width: '100%' }}
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" block
-                                style={{
-                                    backgroundColor: 'rgb(115,94,140)',
-                                    borderColor: 'rgb(115,94,140)',
-                                    color: '#fff'
-                                }}
-                        >
-                            Show Route
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                onFinish={onFinishRange}
+            />
         </>
     );
 }

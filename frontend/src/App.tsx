@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu,} from 'antd';
 import 'antd/dist/reset.css';
 import {DashboardOutlined, UserOutlined, ShopOutlined, HistoryOutlined, EnvironmentOutlined} from '@ant-design/icons';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import Dashboard from './components/Dashboard';
-import Couriers from './components/Couriers';
-import Stores from './components/Stores';
-import StoreVisits from './components/StoreVisits';
-import MapView from './components/MapView';
+import Dashboard from './components/dashboard/Dashboard';
+import Couriers from './components/courier/Couriers';
+import Stores from './components/store/Stores';
+import StoreVisits from './components/storeVisit/StoreVisits';
+import MapView from './components/map/MapView';
 
 const { Sider, Content } = Layout;
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {Row, Col, Card, Spin, Alert, Select, Button, List, Typography, notification} from 'antd';
 import axios from 'axios';
-import './Page.css';
-
+import '../Page.css';
 
 const { Option } = Select;
 const { Text } = Typography;

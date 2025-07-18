@@ -1,111 +1,101 @@
 import React, { useEffect, useState } from 'react';
-import {Row, Col, List, Avatar, Spin, Alert, Typography, Button, message, Popconfirm, Space, notification} from 'antd';
-import {UserOutlined, PlusOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
+import {Row, Col, List, Avatar, Spin, Alert, Typography, Button, message, Popconfirm, notification} from 'antd';
+import { UserOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
-import './Page.css';
-import { Store } from '../types/store';
-import StoreUpsertModal from '../components/StoreUpsertModal';
+import '../Page.css';
+import { Courier } from '../../types/courier';
+import CourierUpsertModal from './CourierUpsertModal';
 
 const { Title, Text } = Typography;
 
-export default function Stores() {
-    const [stores, setStores] = useState<Store[]>([]);
+export default function Couriers() {
+    const [couriers, setCouriers] = useState<Courier[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>();
     const [isAddModalVisible, setAddModalVisible] = useState(false);
     const [isEditModalVisible, setEditModalVisible] = useState(false);
-    const [currentStore, setCurrentStore] = useState<Store | undefined>(undefined);
+    const [currentCourier, setCurrentCourier] = useState<Courier | undefined>(undefined);
 
-    const fetchStores = () => {
+    const fetchCouriers = () => {
         setLoading(true);
         axios
-            .get<Store[]>('/api/stores')
-            .then(res => setStores(res.data))
-            .catch(err => setError(err.message || 'Server Error'))
+            .get<Courier[]>('/api/couriers')
+            .then(res => setCouriers(res.data))
+            .catch(err => setError(err.message || 'Server error'))
             .finally(() => setLoading(false));
     };
 
     useEffect(() => {
-        fetchStores();
+        fetchCouriers();
     }, []);
 
     const showAddModal = () => {
-        setCurrentStore(undefined);
+        setCurrentCourier(undefined);
         setAddModalVisible(true);
     };
-    const handleAddStore = async (values: Omit<Store, 'id'>) => {
+    const handleAdd = async (values: Omit<Courier, 'id'>) => {
         try {
-            await axios.post('/api/stores', { storeInfos: [values] });
+            await axios.post('/api/couriers', values);
             notification.success({
-                message: 'Store Added',
-                placement: 'topRight',
-                duration: 5,
-                description: `Store “${values.name}” was added successfully.`,
+                message: 'Courier Added',
+                description: `The courier “${values.name}” was added successfully.`,
             });
-            fetchStores();
+            fetchCouriers();
             setAddModalVisible(false);
         } catch (err: any) {
             notification.error({
                 message: 'Add Failed',
-                placement: 'topRight',
-                duration: 5,
                 description:
                     err.response?.data?.message ||
-                    'There was an error adding the store. Please try again.',
+                    'There was an error adding the courier. Please try again.',
             });
         }
     };
 
-    const showEditModal = (store: Store) => {
-        setCurrentStore(store);
+    const showEditModal = (c: Courier) => {
+        setCurrentCourier(c);
         setEditModalVisible(true);
     };
-    const handleEditStore = async (
-        values: Omit<Store, 'id'> & Partial<Pick<Store, 'id'>>
-    ) => {
-        if (!currentStore) return;
+
+    const handleEdit = async (values: Omit<Courier, 'id'> | Courier) => {
+        if (!currentCourier) return;
         try {
-            await axios.put(`/api/stores/${currentStore.id}`, values);
+            await axios.put(`/api/couriers/${currentCourier.id}`, { name: values.name });
             notification.success({
-                message: 'Store Updated',
-                description: `Store with ID ${currentStore.id} was updated successfully.`,
+                message: 'Courier Updated',
+                description: `Courier with ID ${currentCourier.id} was updated successfully.`,
             });
-            fetchStores();
+            fetchCouriers();
             setEditModalVisible(false);
-            setCurrentStore(undefined);
+            setCurrentCourier(undefined);
         } catch (err: any) {
             notification.error({
                 message: 'Update Failed',
                 description:
                     err.response?.data?.message ||
-                    'There was an error updating the store.',
+                    'There was an error updating the courier.',
             });
         }
     };
 
     const handleDelete = async (id: number) => {
         try {
-            await axios.delete(`/api/stores/${id}`);
+            await axios.delete(`/api/couriers/${id}`);
             notification.success({
-                message: 'Store Deleted',
-                description: `Store with ID ${id} was deleted successfully.`,
+                message: 'Courier Deleted',
+                description: `Courier with ID ${id} was deleted successfully.`,
             });
-            fetchStores();
+            fetchCouriers();
         } catch {
             notification.error({
                 message: 'Delete Failed',
-                description: 'There was an error deleting the store.',
+                description: 'There was an error deleting the courier.',
             });
         }
     };
 
     if (loading) {
-        return (
-            <Spin
-                tip="Loading stores..."
-                style={{ margin: '100px auto', display: 'block' }}
-            />
-        );
+        return <Spin tip="Loading couriers..." style={{ margin: '100px auto', display: 'block' }} />;
     }
     if (error) {
         return <Alert type="error" message={error} style={{ margin: 20 }} />;
@@ -116,7 +106,7 @@ export default function Stores() {
             <Row justify="space-between" align="middle" gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={8} lg={6}>
                     <Title level={2} ellipsis>
-                        Stores
+                        Couriers
                     </Title>
                 </Col>
                 <Col xs={24} sm={12} md={8} lg={6} style={{ textAlign: 'right' }}>
@@ -131,30 +121,25 @@ export default function Stores() {
                             color: '#fff'
                         }}
                     >
-                        Add Store
+                        Add Courier
                     </Button>
                 </Col>
             </Row>
 
-            <List<Store>
+            <List<Courier>
                 itemLayout="horizontal"
-                dataSource={stores}
+                dataSource={couriers}
                 bordered
-                renderItem={s => (
+                renderItem={c => (
                     <List.Item
                         actions={[
-                            <Button
-                                key="edit"
-                                type="text"
-                                icon={<EditOutlined />}
-                                onClick={() => showEditModal(s)}
-                            />,
+                            <Button key="edit" type="text" icon={<EditOutlined />} onClick={() => showEditModal(c)} />,
                             <Popconfirm
                                 key="delete"
-                                title="Are you sure to delete this store?"
+                                title="Are you sure to delete this courier?"
                                 okText="Yes"
                                 cancelText="No"
-                                onConfirm={() => handleDelete(s.id)}
+                                onConfirm={() => handleDelete(c.id)}
                                 okButtonProps={{
                                     style: {
                                         backgroundColor: 'rgb(115,94,140)',
@@ -175,33 +160,26 @@ export default function Stores() {
                     >
                         <List.Item.Meta
                             avatar={<Avatar icon={<UserOutlined />} />}
-                            title={<Text strong ellipsis>{s.name}</Text>}
-                            description={
-                                <Space direction="vertical" size={0}>
-                                    <Text type="secondary">ID: {s.id}</Text>
-                                    <Text type="secondary">Latitude: {s.lat}</Text>
-                                    <Text type="secondary">Longitude: {s.lng}</Text>
-                                </Space>
-                            }
+                            title={<Text strong ellipsis>{c.name}</Text>}
+                            description={<Text type="secondary">ID: {c.id}</Text>}
                         />
                     </List.Item>
                 )}
             />
 
-            <StoreUpsertModal
+            <CourierUpsertModal
                 visible={isAddModalVisible}
                 onCancel={() => setAddModalVisible(false)}
-                onSubmit={handleAddStore}
+                onSubmit={handleAdd}
             />
-
-            <StoreUpsertModal
+            <CourierUpsertModal
                 visible={isEditModalVisible}
-                initialValues={currentStore}
+                initialValues={currentCourier}
                 onCancel={() => {
                     setEditModalVisible(false);
-                    setCurrentStore(undefined);
+                    setCurrentCourier(undefined);
                 }}
-                onSubmit={handleEditStore}
+                onSubmit={handleEdit}
             />
         </div>
     );

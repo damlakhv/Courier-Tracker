@@ -17,26 +17,22 @@ export default function Dashboard() {
     return (
         <div className="dashboard-container">
             <Row gutter={[16, 16]}>
-                <Col xs={24} sm={12} md={8} lg={6}>
+                <Col xs={24} sm={12} md={8} lg={8}>
                     <Card>
                         <Statistic title="Active Couriers" value={courierCount} />
                     </Card>
                 </Col>
-                <Col xs={24} sm={12} md={8} lg={6}>
+                <Col xs={24} sm={12} md={8} lg={8}>
                     <Card>
                         <Statistic title="Stores" value={storeCount} />
                     </Card>
                 </Col>
-                <Col xs={24} sm={12} md={8} lg={6}>
+                <Col xs={24} sm={12} md={8} lg={8}>
                     <Card>
                         <Statistic title="Visits Today" value={visitsToday} />
                     </Card>
                 </Col>
-                <Col xs={24} sm={12} md={8} lg={6}>
-                    <Card>
-                        <Statistic title="Deliveries Pending" value={7} />
-                    </Card>
-                </Col>
+
             </Row>
 
             <Row gutter={[16, 16]} style={{ marginTop: 24}}>

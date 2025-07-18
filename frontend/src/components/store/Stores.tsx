@@ -1,101 +1,111 @@
 import React, { useEffect, useState } from 'react';
-import {Row, Col, List, Avatar, Spin, Alert, Typography, Button, message, Popconfirm, notification} from 'antd';
-import { UserOutlined, PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import {Row, Col, List, Avatar, Spin, Alert, Typography, Button, message, Popconfirm, Space, notification} from 'antd';
+import {UserOutlined, PlusOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import axios from 'axios';
-import './Page.css';
-import { Courier } from '../types/courier';
-import CourierUpsertModal from '../components/CourierUpsertModal';
+import '../Page.css';
+import { Store } from '../../types/store';
+import StoreUpsertModal from './StoreUpsertModal';
 
 const { Title, Text } = Typography;
 
-export default function Couriers() {
-    const [couriers, setCouriers] = useState<Courier[]>([]);
+export default function Stores() {
+    const [stores, setStores] = useState<Store[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>();
     const [isAddModalVisible, setAddModalVisible] = useState(false);
     const [isEditModalVisible, setEditModalVisible] = useState(false);
-    const [currentCourier, setCurrentCourier] = useState<Courier | undefined>(undefined);
+    const [currentStore, setCurrentStore] = useState<Store | undefined>(undefined);
 
-    const fetchCouriers = () => {
+    const fetchStores = () => {
         setLoading(true);
         axios
-            .get<Courier[]>('/api/couriers')
-            .then(res => setCouriers(res.data))
-            .catch(err => setError(err.message || 'Server error'))
+            .get<Store[]>('/api/stores')
+            .then(res => setStores(res.data))
+            .catch(err => setError(err.message || 'Server Error'))
             .finally(() => setLoading(false));
     };
 
     useEffect(() => {
-        fetchCouriers();
+        fetchStores();
     }, []);
 
     const showAddModal = () => {
-        setCurrentCourier(undefined);
+        setCurrentStore(undefined);
         setAddModalVisible(true);
     };
-    const handleAdd = async (values: Omit<Courier, 'id'>) => {
+    const handleAddStore = async (values: Omit<Store, 'id'>) => {
         try {
-            await axios.post('/api/couriers', values);
+            await axios.post('/api/stores', { storeInfos: [values] });
             notification.success({
-                message: 'Courier Added',
-                description: `The courier “${values.name}” was added successfully.`,
+                message: 'Store Added',
+                placement: 'topRight',
+                duration: 5,
+                description: `Store “${values.name}” was added successfully.`,
             });
-            fetchCouriers();
+            fetchStores();
             setAddModalVisible(false);
         } catch (err: any) {
             notification.error({
                 message: 'Add Failed',
+                placement: 'topRight',
+                duration: 5,
                 description:
                     err.response?.data?.message ||
-                    'There was an error adding the courier. Please try again.',
+                    'There was an error adding the store. Please try again.',
             });
         }
     };
 
-    const showEditModal = (c: Courier) => {
-        setCurrentCourier(c);
+    const showEditModal = (store: Store) => {
+        setCurrentStore(store);
         setEditModalVisible(true);
     };
-
-    const handleEdit = async (values: Omit<Courier, 'id'> | Courier) => {
-        if (!currentCourier) return;
+    const handleEditStore = async (
+        values: Omit<Store, 'id'> & Partial<Pick<Store, 'id'>>
+    ) => {
+        if (!currentStore) return;
         try {
-            await axios.put(`/api/couriers/${currentCourier.id}`, { name: values.name });
+            await axios.put(`/api/stores/${currentStore.id}`, values);
             notification.success({
-                message: 'Courier Updated',
-                description: `Courier with ID ${currentCourier.id} was updated successfully.`,
+                message: 'Store Updated',
+                description: `Store with ID ${currentStore.id} was updated successfully.`,
             });
-            fetchCouriers();
+            fetchStores();
             setEditModalVisible(false);
-            setCurrentCourier(undefined);
+            setCurrentStore(undefined);
         } catch (err: any) {
             notification.error({
                 message: 'Update Failed',
                 description:
                     err.response?.data?.message ||
-                    'There was an error updating the courier.',
+                    'There was an error updating the store.',
             });
         }
     };
 
     const handleDelete = async (id: number) => {
         try {
-            await axios.delete(`/api/couriers/${id}`);
+            await axios.delete(`/api/stores/${id}`);
             notification.success({
-                message: 'Courier Deleted',
-                description: `Courier with ID ${id} was deleted successfully.`,
+                message: 'Store Deleted',
+                description: `Store with ID ${id} was deleted successfully.`,
             });
-            fetchCouriers();
+            fetchStores();
         } catch {
             notification.error({
                 message: 'Delete Failed',
-                description: 'There was an error deleting the courier.',
+                description: 'There was an error deleting the store.',
             });
         }
     };
 
     if (loading) {
-        return <Spin tip="Loading couriers..." style={{ margin: '100px auto', display: 'block' }} />;
+        return (
+            <Spin
+                tip="Loading stores..."
+                style={{ margin: '100px auto', display: 'block' }}
+            />
+        );
     }
     if (error) {
         return <Alert type="error" message={error} style={{ margin: 20 }} />;
@@ -106,7 +116,7 @@ export default function Couriers() {
             <Row justify="space-between" align="middle" gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={8} lg={6}>
                     <Title level={2} ellipsis>
-                        Couriers
+                        Stores
                     </Title>
                 </Col>
                 <Col xs={24} sm={12} md={8} lg={6} style={{ textAlign: 'right' }}>
@@ -121,25 +131,30 @@ export default function Couriers() {
                             color: '#fff'
                         }}
                     >
-                        Add Courier
+                        Add Store
                     </Button>
                 </Col>
             </Row>
 
-            <List<Courier>
+            <List<Store>
                 itemLayout="horizontal"
-                dataSource={couriers}
+                dataSource={stores}
                 bordered
-                renderItem={c => (
+                renderItem={s => (
                     <List.Item
                         actions={[
-                            <Button key="edit" type="text" icon={<EditOutlined />} onClick={() => showEditModal(c)} />,
+                            <Button
+                                key="edit"
+                                type="text"
+                                icon={<EditOutlined />}
+                                onClick={() => showEditModal(s)}
+                            />,
                             <Popconfirm
                                 key="delete"
-                                title="Are you sure to delete this courier?"
+                                title="Are you sure to delete this store?"
                                 okText="Yes"
                                 cancelText="No"
-                                onConfirm={() => handleDelete(c.id)}
+                                onConfirm={() => handleDelete(s.id)}
                                 okButtonProps={{
                                     style: {
                                         backgroundColor: 'rgb(115,94,140)',
@@ -160,26 +175,33 @@ export default function Couriers() {
                     >
                         <List.Item.Meta
                             avatar={<Avatar icon={<UserOutlined />} />}
-                            title={<Text strong ellipsis>{c.name}</Text>}
-                            description={<Text type="secondary">ID: {c.id}</Text>}
+                            title={<Text strong ellipsis>{s.name}</Text>}
+                            description={
+                                <Space direction="vertical" size={0}>
+                                    <Text type="secondary">ID: {s.id}</Text>
+                                    <Text type="secondary">Latitude: {s.lat}</Text>
+                                    <Text type="secondary">Longitude: {s.lng}</Text>
+                                </Space>
+                            }
                         />
                     </List.Item>
                 )}
             />
 
-            <CourierUpsertModal
+            <StoreUpsertModal
                 visible={isAddModalVisible}
                 onCancel={() => setAddModalVisible(false)}
-                onSubmit={handleAdd}
+                onSubmit={handleAddStore}
             />
-            <CourierUpsertModal
+
+            <StoreUpsertModal
                 visible={isEditModalVisible}
-                initialValues={currentCourier}
+                initialValues={currentStore}
                 onCancel={() => {
                     setEditModalVisible(false);
-                    setCurrentCourier(undefined);
+                    setCurrentStore(undefined);
                 }}
-                onSubmit={handleEdit}
+                onSubmit={handleEditStore}
             />
         </div>
     );

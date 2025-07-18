@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Button, Space } from 'antd';
-import { Store } from '../types/store';
+import { Store } from '../../types/store';
 
 interface Props {
     visible: boolean;
@@ -26,10 +26,10 @@ const StoreUpsertModal: React.FC<Props> = ({
     return (
         <Modal
             title={initialValues ? 'Edit Store' : 'Add New Store'}
-            visible={visible}
+            open={visible}
             onCancel={onCancel}
             footer={null}
-            destroyOnClose
+            destroyOnHidden
         >
             <Form
                 form={form}
