@@ -59,6 +59,7 @@ const CourierUpsertModal: React.FC<Props> = ({
                         <Button
                             type="primary"
                             htmlType="submit"
+                            data-testid="courier-upsert-submit"
                             style={{
                                 backgroundColor: 'rgb(115,94,140)',
                                 borderColor: 'rgb(115,94,140)',

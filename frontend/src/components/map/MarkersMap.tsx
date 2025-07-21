@@ -70,6 +70,7 @@ export default function MarkersMap({
 
     return (
         <GoogleMap
+            data-testid="google-map"
             mapContainerStyle={containerStyle}
             center={DEFAULT_CENTER}
             zoom={10}

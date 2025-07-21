@@ -111,6 +111,7 @@ export default function Couriers() {
                 </Col>
                 <Col xs={24} sm={12} md={8} lg={6} style={{ textAlign: 'right' }}>
                     <Button
+                        data-testid={"add-courier-btn"}
                         type="primary"
                         block
                         icon={<PlusOutlined />}

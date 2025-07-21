@@ -48,4 +48,7 @@ public class StoreVisitLogService {
         LocalDateTime end = today.plusDays(1).atStartOfDay();
         return storeVisitLogRepository.countByEntryTimeBetween(start, end);
     }
+
+
+
 }

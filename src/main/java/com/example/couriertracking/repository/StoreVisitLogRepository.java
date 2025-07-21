@@ -1,6 +1,8 @@
 package com.example.couriertracking.repository;
 
 import com.example.couriertracking.model.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +23,17 @@ public interface StoreVisitLogRepository extends JpaRepository<StoreVisitLog, Lo
 
     @Query("SELECT l FROM StoreVisitLog l WHERE l.store.id = :storeId ORDER BY l.entryTime DESC")
     List<StoreVisitLog> findByStoreIdOrderByEntryTimeDesc(@Param("storeId") Long storeId);
+
+    @Query(value = """
+      SELECT l
+      FROM StoreVisitLog l
+      ORDER BY l.entryTime DESC
+    """)
+    List<StoreVisitLog> findTopByOrderByTimestampDesc(Pageable pageable);
+
+    default List<StoreVisitLog> findTopByOrderByTimestampDesc(int limit) {
+        return findTopByOrderByTimestampDesc(PageRequest.of(0, limit));
+    }
 
     long countByEntryTimeBetween(LocalDateTime start, LocalDateTime end);
 }
