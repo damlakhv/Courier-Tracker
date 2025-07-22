@@ -4,11 +4,18 @@ import { Row, Col, Card, Statistic } from 'antd';
 import './Dashboard.css';
 import { Bar } from '@ant-design/charts';
 
+interface StoreVisitDto {
+    courierName: string;
+    visitCount: number;
+    stores: Record<string, number>;
+}
+
 export default function Dashboard() {
-    const [courierCount, setCourierCount] = useState<number>(0);
-    const [storeCount, setStoreCount] = useState<number>(0);
-    const [visitsToday, setVisitsToday] = useState<number>(0);
+    const [courierCount, setCourierCount] = useState(0);
+    const [storeCount, setStoreCount] = useState(0);
+    const [visitsToday, setVisitsToday] = useState(0);
     const [courierDistances, setCourierDistances] = useState<{ name: string; distance: number }[]>([]);
+    const [visits, setVisits] = useState<StoreVisitDto[]>([]);
 
     useEffect(() => {
         axios.get('/api/couriers').then(res => {
@@ -37,10 +44,18 @@ export default function Dashboard() {
         });
         axios.get('/api/stores').then(res => setStoreCount(res.data.length));
         axios.get('/api/store-visits/count-today').then(res => setVisitsToday(res.data));
+        axios.get('/api/store-visits/statistics/courier-store-visits', {
+            params: {
+                start: '2025-07-21T00:00:00',
+                end: '2025-07-22T00:00:00',
+            },
+        }).then(res => {
+            setVisits(res.data.sort((a: StoreVisitDto, b: StoreVisitDto) => b.visitCount - a.visitCount));
+        });
     }, []);
 
-    const filteredData = courierDistances.filter(d => d.distance > 0);
 
+    const filteredData = courierDistances.filter(d => d.distance > 0);
     const barConfig = {
         data: filteredData,
         xField: 'name',
@@ -52,6 +67,23 @@ export default function Dashboard() {
             formatter: (value: number) => value.toFixed(2) + ' km',
         },
         height: Math.max(200, filteredData.length * 40),
+        autoFit: true,
+        isStack: false,
+        isGroup: false,
+        barStyle: { radius: [2, 2, 0, 0] },
+    };
+
+    const courierVisitsBarConfig = {
+        data: visits,
+        xField: 'courierName',
+        yField: 'visitCount',
+        color: '#714f8a',
+        legend: false,
+        label: {
+            position: 'right',
+            formatter: (value: number) => value + ' visits',
+        },
+        height: Math.max(200, visits.length * 40),
         autoFit: true,
         isStack: false,
         isGroup: false,
@@ -80,14 +112,13 @@ export default function Dashboard() {
 
             <Row gutter={[16, 16]} style={{ marginTop: 24 }}>
                 <Col xs={24} lg={12}>
-                    <Card title="Statistics" className="dashboard-card">
-                        <h3>Courier Kilometers Traveled (21.07.2025)</h3>
+                    <Card title="Courier Kilometers Traveled (21.07.2025)" className="dashboard-card">
                         <Bar {...barConfig} />
                     </Card>
                 </Col>
                 <Col xs={24} lg={12}>
-                    <Card title="Statistics" className="dashboard-card">
-
+                    <Card title="Top Couriers by Store Visits (21.07.2025)" className="dashboard-card">
+                        <Bar {...courierVisitsBarConfig} />
                     </Card>
                 </Col>
             </Row>

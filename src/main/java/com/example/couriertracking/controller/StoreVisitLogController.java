@@ -1,11 +1,13 @@
 package com.example.couriertracking.controller;
 
 import com.example.couriertracking.model.AddStoreVisitLogRequest;
+import com.example.couriertracking.model.StoreVisitDto;
 import com.example.couriertracking.model.StoreVisitLog;
 import com.example.couriertracking.service.StoreVisitLogService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -40,6 +42,16 @@ public class StoreVisitLogController {
     public ResponseEntity<Long> getTodayVisitCount() {
         long count = storeVisitLogService.countVisitsToday();
         return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/statistics/courier-store-visits")
+    public List<StoreVisitDto> courierStoreVisits(
+            @RequestParam String start,
+            @RequestParam String end
+    ) {
+        var startDt = LocalDateTime.parse(start);
+        var endDt   = LocalDateTime.parse(end);
+        return storeVisitLogService.getCourierStoreVisits(startDt, endDt);
     }
 
 
