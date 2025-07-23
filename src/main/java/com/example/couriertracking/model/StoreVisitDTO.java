@@ -2,7 +2,7 @@ package com.example.couriertracking.model;
 
 import java.util.List;
 
-public record StoreVisitDto(
+public record StoreVisitDTO(
         String courierName,
         int visitCount,
         List<String> stores

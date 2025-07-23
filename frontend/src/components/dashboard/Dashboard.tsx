@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Col, Card, Statistic } from 'antd';
 import './Dashboard.css';
-import { Bar } from '@ant-design/charts';
+import { Bar, Column } from '@ant-design/charts';
 
 interface StoreVisitDto {
     courierName: string;
@@ -57,10 +57,12 @@ export default function Dashboard() {
 
     const filteredData = courierDistances.filter(d => d.distance > 0);
     const barConfig = {
+        className: 'firstBar',
         data: filteredData,
         xField: 'name',
         yField: 'distance',
-        color: ['#714f8a'], //this does not work, I don't know why
+        color: '#714f8a',
+
         legend: false,
         label: {
             position: 'right',
@@ -70,7 +72,8 @@ export default function Dashboard() {
         autoFit: true,
         isStack: false,
         isGroup: false,
-        barStyle: { radius: [2, 2, 0, 0] },
+
+
     };
 
     const courierVisitsBarConfig = {
@@ -118,7 +121,7 @@ export default function Dashboard() {
                 </Col>
                 <Col xs={24} lg={12}>
                     <Card title="Top Couriers by Store Visits (21.07.2025)" className="dashboard-card">
-                        <Bar {...courierVisitsBarConfig} />
+                        <Column {...courierVisitsBarConfig} />
                     </Card>
                 </Col>
             </Row>

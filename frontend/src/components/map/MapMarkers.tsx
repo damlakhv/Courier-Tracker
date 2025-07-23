@@ -4,14 +4,12 @@ import mapStyle from './mapStyle';
 import StoreMarkers from './StoreMarkers';
 import CourierMarkers from './CourierMarkers';
 import RoutePolyline from './RoutePolyline';
-import { Store } from '../../types/store';
-import { CourierLastLocation } from '../../types/courierLastLocation';
-import { CourierLog } from '../../types/courierLog';
+import { Store, CourierLastLocation, CourierLog } from '../types';
 
 const containerStyle = { width: '100%', height: '400px' };
 const DEFAULT_CENTER = { lat: 41.081324, lng: 29.032291 };
 
-interface MarkersMapProps {
+interface MapMarkersProp {
     stores: Store[];
     couriers: CourierLastLocation[];
     logs: CourierLog[];
@@ -19,13 +17,13 @@ interface MarkersMapProps {
     onCourierClick: (courierId: number) => void;
 }
 
-export default function MarkersMap({
+export default function MapMarkers({
                                        stores,
                                        couriers,
                                        logs,
                                        totalDistance = null,
                                        onCourierClick,
-                                   }: MarkersMapProps) {
+                                   }: MapMarkersProp) {
     const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
     const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
 

@@ -1,7 +1,7 @@
 package com.example.couriertracking.controller;
 
 import com.example.couriertracking.model.AddStoreVisitLogRequest;
-import com.example.couriertracking.model.StoreVisitDto;
+import com.example.couriertracking.model.StoreVisitDTO;
 import com.example.couriertracking.model.StoreVisitLog;
 import com.example.couriertracking.service.StoreVisitLogService;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ public class StoreVisitLogController {
     }
 
     @GetMapping("/statistics/courier-store-visits")
-    public List<StoreVisitDto> courierStoreVisits(
+    public List<StoreVisitDTO> courierStoreVisits(
             @RequestParam String start,
             @RequestParam String end
     ) {

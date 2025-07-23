@@ -1,6 +1,6 @@
 import React from 'react';
 import { Marker, InfoWindow } from '@react-google-maps/api';
-import { Store } from '../../types/store';
+import { Store } from '../types';
 
 interface StoreMarkersProps {
     stores: Store[];

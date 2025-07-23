@@ -50,10 +50,10 @@ public class StoreVisitLogService {
         return storeVisitLogRepository.countByEntryTimeBetween(start, end);
     }
 
-    public List<StoreVisitDto> getCourierStoreVisits(LocalDateTime start, LocalDateTime end) {
+    public List<StoreVisitDTO> getCourierStoreVisits(LocalDateTime start, LocalDateTime end) {
         List<Object[]> counts = storeVisitLogRepository.findCourierVisitCounts(start, end);
 
-        List<StoreVisitDto> result = new ArrayList<>();
+        List<StoreVisitDTO> result = new ArrayList<>();
         for (Object[] row : counts) {
             String courierName    = (String) row[0];
             int visitCount        = ((Number) row[1]).intValue();
@@ -62,7 +62,7 @@ public class StoreVisitLogService {
                     courierName, start, end
             );
 
-            result.add(new StoreVisitDto(courierName, visitCount, stores));
+            result.add(new StoreVisitDTO(courierName, visitCount, stores));
         }
 
         return result;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Marker, InfoWindow } from '@react-google-maps/api';
-import { CourierLastLocation } from '../../types/courierLastLocation';
+import {CourierLastLocation} from '../types';
 
 interface CourierMarkersProps {
     couriers: CourierLastLocation[];

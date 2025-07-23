@@ -2,6 +2,8 @@ package com.example.couriertracking.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class LocationLog {
@@ -39,4 +41,5 @@ public class LocationLog {
     public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
     public Courier getCourier() { return courier; }
     public void setCourier(Courier courier) { this.courier = courier; }
+
 }

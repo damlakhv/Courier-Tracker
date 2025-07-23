@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import com.example.couriertracking.model.CourierLastLocationDto;
+import com.example.couriertracking.model.CourierLastLocationDTO;
 
 import org.slf4j.Logger;
 
@@ -113,13 +113,13 @@ public class LocationLogService {
         return totalDistance / 1000.0;
     }
 
-    public List<LocationLogDto> fetchLogsByRange(Long courierId, LocalDateTime start, LocalDateTime end) {
+    public List<LocationLogDTO> fetchLogsByRange(Long courierId, LocalDateTime start, LocalDateTime end) {
         return fetchLogs(courierId, start, end).stream()
-                .map(log -> new LocationLogDto(log.getLat(), log.getLng(), log.getTimestamp()))
+                .map(log -> new LocationLogDTO(log.getLat(), log.getLng(), log.getTimestamp()))
                 .collect(Collectors.toList());
     }
 
-    public List<CourierLastLocationDto> fetchAllCouriersLastLocations() {
+    public List<CourierLastLocationDTO> fetchAllCouriersLastLocations() {
         return locationLogRepository.findAllCouriersLastLocations();
     }
 }

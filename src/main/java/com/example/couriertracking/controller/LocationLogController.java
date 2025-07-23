@@ -1,8 +1,8 @@
 package com.example.couriertracking.controller;
 
 import com.example.couriertracking.model.AddLocationLogRequest;
-import com.example.couriertracking.model.LocationLogDto;
-import com.example.couriertracking.model.CourierLastLocationDto;
+import com.example.couriertracking.model.LocationLogDTO;
+import com.example.couriertracking.model.CourierLastLocationDTO;
 import com.example.couriertracking.service.LocationLogService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -38,18 +38,18 @@ public class LocationLogController {
     }
 
     @GetMapping("/by-range")
-    public ResponseEntity<List<LocationLogDto>> getLogsByRange(
+    public ResponseEntity<List<LocationLogDTO>> getLogsByRange(
             @RequestParam Long courierId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
 
-        List<LocationLogDto> logs = locationLogService.fetchLogsByRange(courierId, start, end);
+        List<LocationLogDTO> logs = locationLogService.fetchLogsByRange(courierId, start, end);
         return ResponseEntity.ok(logs);
     }
 
     @GetMapping("/last-locations")
-    public ResponseEntity<List<CourierLastLocationDto>> getAllCouriersLastLocations() {
-        List<CourierLastLocationDto> lastLocations = locationLogService.fetchAllCouriersLastLocations();
+    public ResponseEntity<List<CourierLastLocationDTO>> getAllCouriersLastLocations() {
+        List<CourierLastLocationDTO> lastLocations = locationLogService.fetchAllCouriersLastLocations();
         return ResponseEntity.ok(lastLocations);
     }
 

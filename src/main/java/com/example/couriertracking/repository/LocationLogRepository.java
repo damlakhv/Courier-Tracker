@@ -1,9 +1,11 @@
 package com.example.couriertracking.repository;
 
 import com.example.couriertracking.model.LocationLog;
-import com.example.couriertracking.model.CourierLastLocationDto;
+import com.example.couriertracking.model.CourierLastLocationDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +14,7 @@ public interface LocationLogRepository extends JpaRepository<LocationLog, Long> 
     List<LocationLog> findByCourierIdAndTimestampBetween(Long courierId, LocalDateTime start, LocalDateTime end);
 
     @Query("""
-      SELECT new com.example.couriertracking.model.CourierLastLocationDto(
+      SELECT new com.example.couriertracking.model.CourierLastLocationDTO(
         l.courier.id,
         l.lat,
         l.lng)
@@ -23,5 +25,9 @@ public interface LocationLogRepository extends JpaRepository<LocationLog, Long> 
         WHERE l2.courier.id = l.courier.id
       )
     """)
-    List<CourierLastLocationDto> findAllCouriersLastLocations();
+    List<CourierLastLocationDTO> findAllCouriersLastLocations();
+
 }
+
+
+

@@ -19,12 +19,11 @@ jest.mock("@react-google-maps/api", () => {
     };
 });
 
-import MarkersMap from "../components/map/MarkersMap";
-import { Store } from "../types/store";
-import { CourierLastLocation } from "../types/courierLastLocation";
-import { CourierLog } from "../types/courierLog";
+import MapMarkers from "../components/map/MapMarkers";
+import { Store, CourierLastLocation, CourierLog } from "../components/types";
 
-describe("MarkersMap Component", () => {
+
+describe("MapMarkers Component", () => {
     const stores: Store[] = [
         { id: 1, name: "Store A", lat: 41.0, lng: 29.0 },
         { id: 2, name: "Store B", lat: 41.1, lng: 29.1 },
@@ -48,7 +47,7 @@ describe("MarkersMap Component", () => {
 
     it("renders GoogleMap container", () => {
         render(
-            <MarkersMap
+            <MapMarkers
                 stores={[]}
                 couriers={[]}
                 logs={[]}
@@ -60,7 +59,7 @@ describe("MarkersMap Component", () => {
 
     it("renders one <Marker> per store and courier", () => {
         render(
-            <MarkersMap
+            <MapMarkers
                 stores={stores}
                 couriers={couriers}
                 logs={[]}
@@ -72,7 +71,7 @@ describe("MarkersMap Component", () => {
 
     it("renders <Polyline> when logs.length >= 2", () => {
         render(
-            <MarkersMap
+            <MapMarkers
                 stores={[]}
                 couriers={[]}
                 logs={logs}
@@ -84,7 +83,7 @@ describe("MarkersMap Component", () => {
 
     it("does NOT render <Polyline> when logs.length < 2", () => {
         render(
-            <MarkersMap
+            <MapMarkers
                 stores={[]}
                 couriers={[]}
                 logs={[logs[0]]}
@@ -98,7 +97,7 @@ describe("MarkersMap Component", () => {
         const onCourierClick = jest.fn();
         const user = userEvent.setup();
         render(
-            <MarkersMap
+            <MapMarkers
                 stores={[]}
                 couriers={couriers}
                 logs={[]}

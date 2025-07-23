@@ -3,7 +3,7 @@ import {Row, Col, List, Avatar, Spin, Alert, Typography, Button, message, Popcon
 import {UserOutlined, PlusOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import '../Page.css';
-import { Store } from '../../types/store';
+import { Store } from '../types';
 import StoreUpsertModal from './StoreUpsertModal';
 
 const { Title, Text } = Typography;

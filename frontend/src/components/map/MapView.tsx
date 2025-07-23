@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Spin, Alert } from 'antd';
 import axios from 'axios';
 import useGoogleMapsLoader from '../../useGoogleMapsLoader';
-import MarkersMap from './MarkersMap';
+import MapMarkers from './MapMarkers';
 import MapRangeModal from './MapRangeModal';
-import { Store } from '../../types/store';
-import { CourierLastLocation } from '../../types/courierLastLocation';
-import { CourierLog } from '../../types/courierLog';
+import { Store, CourierLastLocation, CourierLog } from '../types';
+
 
 export default function MapView() {
     const apiKey = '';
@@ -95,7 +94,7 @@ export default function MapView() {
                         ) : error ? (
                             <Alert type="error" message={error} />
                         ) : isGoogleMapsLoaded ? (
-                            <MarkersMap
+                            <MapMarkers
                                 stores={stores}
                                 couriers={couriers}
                                 logs={logs}
