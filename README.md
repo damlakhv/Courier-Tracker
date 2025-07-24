@@ -1,43 +1,45 @@
-# Courier Tracking Case Study
-You are supposed to create a restful web application with Java, that mainly takes streaming geolocations of couriers (time, courier, lat, lng) as input. The application 
-also must meet following criteria; 
-* Log courier and store when any courier enters radius of 100 meters from Migros stores. Reentries to the same store's circumference over 1 minute should not count as "entrance". 
-* The application must provide a way for querying total distances, over which any courier travels. A sample method signature may be such as;  ``Double getTotalTravelDistance(courierId);``
-* Create instructions to easily run and test your application (i.e. README or an executable script is nice to have).
+# Courier Tracking System
 
-## Input Data
-stores.json
+## Overview
+This project tracks couriers' real-time locations, records their entries into the system when they come within 100 
+meters of stores, and calculates and displays the total distance traveled by each courier.
+
+## Requirements
+- **Docker** (>= 20.10)
+- **Docker Compose** (v2+)
+- **Git** (Needed to clone the repository)
+- **Google Maps API key** (This is needed to use the map)
+
+## Installation
+1. Clone the repository:
+```bash
+git clone https://github.com/damlakhv/Courier-Tracker.git
 ```
-[
-  {
-    "name": "Ataşehir MMM Migros",
-    "lat": 40.9923307,
-    "lng": 29.1244229
-  },
-  {
-    "name": "Novada MMM Migros",
-    "lat": 40.986106,
-    "lng": 29.1161293
-  },
-  {
-    "name": "Beylikdüzü 5M Migros",
-    "lat": 41.0066851,
-    "lng": 28.6552262
-  },
-  {
-    "name": "Ortaköy MMM Migros",
-    "lat": 41.055783,
-    "lng": 29.0210292
-  },
-  {
-    "name": "Caddebostan MMM Migros",
-    "lat": 40.9632463,
-    "lng": 29.0630908
-  }
-]
+2. Move to the project:
+```bash
+cd Courier-Tracker
 ```
-Use the stores.json file as reference for Migros store locations.
+3. Open your 'docker-compose.yml' and under each 'environment:' block set your passwords.
+```yaml
+MYSQL_ROOT_PASSWORD: <your_password>
+SPRING_DATASOURCE_PASSWORD: <your_password>
+```
+> **Note:** In this case, your passwords will be visible in `docker-compose.yml`; if you are going to make the 
+> repository public, you should use the **.env** method.
 
-## Solution Proposal
-* Push your solution to `origin/<your-branch-name>`, and create a pull request. Please do not merge your pull request.
+4. Enter your Google Maps API key in frontend/src/components/map/MapView.tsx :
+```ts
+const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
+```
 
+5. Build the backend JAR:
+```bash
+./mvnw clean package
+```
+
+6. Build the project with Docker Compose:
+```bash
+docker-compose up -d --build
+```
+
+Open the frontend in your browser: http://localhost:3000

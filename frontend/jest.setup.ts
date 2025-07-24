@@ -14,19 +14,16 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// Polyfill getComputedStyle to support getPropertyValue
 Object.defineProperty(window, 'getComputedStyle', {
   writable: true,
   value: (elt: Element) => ({
     getPropertyValue: (prop: string) => {
-      // Return inline style or empty string
       return (elt as any).style?.getPropertyValue
           ? (elt as any).style.getPropertyValue(prop)
           : (elt as any).style?.[prop] || '';
     },
     width: '0px',
     height: '0px',
-    // stub other CSSStyleDeclaration properties if needed
   } as unknown as CSSStyleDeclaration),
 });
 
