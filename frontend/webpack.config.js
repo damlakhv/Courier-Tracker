@@ -42,7 +42,7 @@ module.exports = {
         proxy: [
             {
                 context: ['/api'],
-                target: 'http://localhost:8080',
+                target: 'http://app:8080',
                 changeOrigin: true,
                 secure: false,
             },

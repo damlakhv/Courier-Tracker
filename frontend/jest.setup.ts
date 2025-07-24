@@ -14,16 +14,25 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+// Polyfill getComputedStyle to support getPropertyValue
 Object.defineProperty(window, 'getComputedStyle', {
-  value: () => ({
+  writable: true,
+  value: (elt: Element) => ({
+    getPropertyValue: (prop: string) => {
+      // Return inline style or empty string
+      return (elt as any).style?.getPropertyValue
+          ? (elt as any).style.getPropertyValue(prop)
+          : (elt as any).style?.[prop] || '';
+    },
     width: '0px',
     height: '0px',
-  }),
+    // stub other CSSStyleDeclaration properties if needed
+  } as unknown as CSSStyleDeclaration),
 });
 
 import { notification } from 'antd';
 notification.success = () => null;
-notification.error   = () => null;
+notification.error = () => null;
 
 ;(global as any).google = {
   maps: {

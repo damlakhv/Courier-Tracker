@@ -1,3 +1,4 @@
+version: '3.8'
 
 services:
   mysql:
@@ -11,10 +12,14 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./ddl:/docker-entrypoint-initdb.d
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: courier-app
+    restart: always
     ports:
       - "8080:8080"
     depends_on:
@@ -23,5 +28,19 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/courier_tracking
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD:
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: courier-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - app
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+
 volumes:
   mysql_data:
