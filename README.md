@@ -2,7 +2,12 @@
 
 ## Overview
 This project tracks couriers' real-time locations, records their entries into the system when they come within 100 
-meters of stores, and calculates and displays the total distance traveled by each courier.
+meters of stores , and calculates and displays the total distance traveled by each courier.
+
+## Built With
+**Backend:** Java, Spring Boot, MySQL, Maven, Spring Data JPA, RESTful API
+**Frontend:** React, TypeScript, Ant Design, Google Maps JavaScript API
+**Testing:** JUnit & Mockito for Backend, Jest for Frontend unit tests
 
 ## Requirements
 - **Docker** (>= 20.10)
@@ -27,7 +32,7 @@ SPRING_DATASOURCE_PASSWORD: <your_password>
 > **Note:** In this case, your passwords will be visible in `docker-compose.yml`; if you are going to make the 
 > repository public, you should use the **.env** method.
 
-4. Enter your Google Maps API key in frontend/src/components/map/MapView.tsx :
+4. Edit the file frontend/src/components/map/MapView.tsx and replace:
 ```ts
 const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
 ```
@@ -36,10 +41,43 @@ const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY';
 ```bash
 ./mvnw clean package
 ```
+> **Note:** If you get "zsh: permission denied: ./mvnm", firstly run:
+```bash
+chmod +x mvnw
+```
 
-6. Build the project with Docker Compose:
+6. (If there is not) Add the node_modules to the project.
+```bash
+cd frontend
+npm install
+cd ..
+```
+
+7. Build the project with Docker Compose:
 ```bash
 docker-compose up -d --build
 ```
 
 Open the frontend in your browser: http://localhost:3000
+
+## Endpoints
+**Couriers**
+- `GET /api/couriers` – List all couriers
+- `POST /api/couriers` – Add a new courier
+- `PUT /api/couriers/{id}` – Update courier info
+- `DELETE /api/couriers/{id}` – Delete courier
+**Stores**
+- `GET /api/stores` – List all stores
+- `POST /api/stores` – Add multiple stores
+- `PUT /api/stores/{id}` – Update store info
+- `DELETE /api/stores/{id}` – Delete store
+**Store Visits**
+- `GET /api/store-visits` – List all visit logs
+- `GET /api/store-visits/count-today` – Count of today’s visits
+- `GET /api/store-visits/statistics/courier-store-visits?start=&end=` – Visits per courier
+- `GET /api/store-visits/statistics/store-visit-counts` – Visit count per store
+- `GET /api/store-visits/statistics/store-visit-heatmap` – Visit data for heatmap
+**Location Logs**
+- `GET /api/location-logs` – List all location logs
+- `POST /api/location-logs` – Add a location log
+- `GET /api/location-logs/total-distance?courierId=&start=&end=` – Total km traveled by courier

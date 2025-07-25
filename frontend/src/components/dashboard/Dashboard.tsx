@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Row, Col, Card, Statistic } from 'antd';
 import './Dashboard.css';
-import { Bar, Column } from '@ant-design/charts';
+import {
+    BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
+} from 'recharts';
 
 interface StoreVisitDto {
     courierName: string;
@@ -56,42 +58,6 @@ export default function Dashboard() {
 
 
     const filteredData = courierDistances.filter(d => d.distance > 0);
-    const barConfig = {
-        className: 'firstBar',
-        data: filteredData,
-        xField: 'name',
-        yField: 'distance',
-        color: '#714f8a',
-
-        legend: false,
-        label: {
-            position: 'right',
-            formatter: (value: number) => value.toFixed(2) + ' km',
-        },
-        height: Math.max(200, filteredData.length * 40),
-        autoFit: true,
-        isStack: false,
-        isGroup: false,
-
-
-    };
-
-    const courierVisitsBarConfig = {
-        data: visits,
-        xField: 'courierName',
-        yField: 'visitCount',
-        color: '#714f8a',
-        legend: false,
-        label: {
-            position: 'right',
-            formatter: (value: number) => value + ' visits',
-        },
-        height: Math.max(200, visits.length * 40),
-        autoFit: true,
-        isStack: false,
-        isGroup: false,
-        barStyle: { radius: [2, 2, 0, 0] },
-    };
 
     return (
         <div className="dashboard-container">
@@ -116,12 +82,43 @@ export default function Dashboard() {
             <Row gutter={[16, 16]} style={{ marginTop: 24 }}>
                 <Col xs={24} lg={12}>
                     <Card title="Courier Kilometers Traveled (21.07.2025)" className="dashboard-card">
-                        <Bar {...barConfig} />
+                        <ResponsiveContainer width="100%" height={Math.max(200, filteredData.length * 50)}>
+                            <BarChart
+                                layout="vertical"
+                                data={filteredData}
+                                margin={{ top: 10, right: 30, left: 50, bottom: 5 }}
+                            >
+                                <XAxis type="number" tickFormatter={(v) => `${v.toFixed(1)} km`} />
+                                <YAxis type="category" dataKey="name" />
+                                <Tooltip formatter={(value) => `${(value as number).toFixed(2)} km`}
+                                />
+                                <Bar dataKey="distance" fill="#8884d8">
+                                    {filteredData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill="#714f8a" />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
                     </Card>
                 </Col>
                 <Col xs={24} lg={12}>
                     <Card title="Top Couriers by Store Visits (21.07.2025)" className="dashboard-card">
-                        <Column {...courierVisitsBarConfig} />
+                        <ResponsiveContainer width="100%" height={Math.max(200, visits.length * 50)}>
+                            <BarChart
+                                layout="vertical"
+                                data={visits}
+                                margin={{ top: 10, right: 30, left: 50, bottom: 5 }}
+                            >
+                                <XAxis type="number" />
+                                <YAxis type="category" dataKey="courierName" />
+                                <Tooltip formatter={(value) => `${value} visits`} />
+                                <Bar dataKey="visitCount" fill="#8884d8">
+                                    {visits.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill="#714f8a" />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
                     </Card>
                 </Col>
             </Row>

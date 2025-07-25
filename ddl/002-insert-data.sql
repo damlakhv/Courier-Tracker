@@ -1,24 +1,24 @@
 insert into courier_tracking.stores (id, lat, lng, name)
-values  (1, 40.9923307, 29.1244229, 'Ataşehir MMM Migros'),
+values  (1, 40.9923307, 29.1244229, 'Atasehir MMM Migros'),
         (2, 40.986106, 29.1161293, 'Novada MMM Migros'),
-        (3, 41.0066851, 28.6552262, 'Beylikdüzü 5M Migros'),
+        (3, 41.0066851, 28.6552262, 'Beylikduzu 5M Migros'),
         (4, 39.88969808333436, 32.84961232701679, 'Ansera MMM Migros'),
         (5, 39.922566684115154, 32.860669774201696, 'Kolej M Migros'),
         (6, 39.88434160998711, 32.7583648819354, 'Bilkent 5M Migros'),
-        (12, 39.92620606114497, 32.86839523408878, 'Kurtuluş Migros'),
+        (12, 39.92620606114497, 32.86839523408878, 'Kurtulus Migros'),
         (13, 39.92447970589766, 32.84577385065023, 'Maltepe Migros'),
-        (14, 39.922609290816304, 32.82650845342967, 'Bahçelievler M Migros'),
-        (15, 41.00056577980457, 28.6453044368488, 'Beylikdüzü MM Migros');
+        (14, 39.922609290816304, 32.82650845342967, 'Bahcelievler M Migros'),
+        (15, 41.00056577980457, 28.6453044368488, 'Beylikduzu MM Migros');
 
 insert into courier_tracking.couriers (id, name)
-values  (1111, 'Ayrancı Courier'),
+values  (1111, 'Ayranci Courier'),
         (1112, 'Kolej Courier'),
         (1113, 'Bilkent Courier'),
-        (1120, 'Kurtuluş Courier'),
+        (1120, 'Kurtulus Courier'),
         (1121, 'Maltepe Courier'),
-        (1122, 'Bahçelievler Courier'),
-        (1123, 'Ataşehir Courier'),
-        (1125, 'Beylikdüzü Courier');
+        (1122, 'Bahcelievler Courier'),
+        (1123, 'Atasehir Courier'),
+        (1125, 'Beylikduzu Courier');
 
 insert into courier_tracking.location_log (id, lat, lng, timestamp, courier_id)
 values   (1276, 39.92620606114497, 32.86839523408878, '2025-07-18 10:00:00.000000', 1120),
@@ -97,7 +97,7 @@ values   (1276, 39.92620606114497, 32.86839523408878, '2025-07-18 10:00:00.00000
         (1349, 39.9219, 32.8625, '2025-07-21 16:11:00.000000', 1112),
         (1350, 39.9217, 32.8613, '2025-07-21 16:12:00.000000', 1112),
         (1351, 39.9229, 32.8609, '2025-07-21 16:13:00.000000', 1112),
-        (1352, 39.9226, 32.8605, '2025-07-21 16:14:00.000000', 1112),
+        (1352, 39.9226, 32.8605, '2025-07-21 16:14:00.000000', 1112);
 
 
 insert into courier_tracking.store_visit_log (id, entry_time, courier_id, store_id)
@@ -120,4 +120,4 @@ values  (48, '2025-07-18 10:00:00.000000', 1120, 12),
         (64, '2025-07-21 16:02:00.000000', 1112, 5),
         (65, '2025-07-21 16:03:00.000000', 1112, 5),
         (66, '2025-07-21 16:13:00.000000', 1112, 5),
-        (67, '2025-07-21 16:14:00.000000', 1112, 5),
+        (67, '2025-07-21 16:14:00.000000', 1112, 5);
