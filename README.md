@@ -82,8 +82,11 @@ Open the frontend in your browser: http://localhost:3000
 - `POST /api/location-logs` – Add a location log
 - `GET /api/location-logs/total-distance?courierId=&start=&end=` – Total km traveled by courier
 
-##Demo
+## Demo
+
 https://github.com/user-attachments/assets/fd1006c0-f0ee-46f8-bf0f-ad491373bef5
+
 Also see the responsive design:
+
 https://github.com/user-attachments/assets/4dd6f862-d32a-4b72-be68-c19fa47a16a4
 
