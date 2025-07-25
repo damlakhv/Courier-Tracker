@@ -6,7 +6,9 @@ meters of stores , and calculates and displays the total distance traveled by ea
 
 ## Built With
 **Backend:** Java, Spring Boot, MySQL, Maven, Spring Data JPA, RESTful API
+
 **Frontend:** React, TypeScript, Ant Design, Google Maps JavaScript API
+
 **Testing:** JUnit & Mockito for Backend, Jest for Frontend unit tests
 
 ## Requirements
