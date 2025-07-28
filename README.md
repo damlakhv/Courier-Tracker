@@ -68,17 +68,20 @@ Open the frontend in your browser: http://localhost:3000
 - `POST /api/couriers` – Add a new courier
 - `PUT /api/couriers/{id}` – Update courier info
 - `DELETE /api/couriers/{id}` – Delete courier
+  
 **Stores**
 - `GET /api/stores` – List all stores
 - `POST /api/stores` – Add multiple stores
 - `PUT /api/stores/{id}` – Update store info
 - `DELETE /api/stores/{id}` – Delete store
+  
 **Store Visits**
 - `GET /api/store-visits` – List all visit logs
 - `GET /api/store-visits/count-today` – Count of today’s visits
 - `GET /api/store-visits/statistics/courier-store-visits?start=&end=` – Visits per courier
 - `GET /api/store-visits/statistics/store-visit-counts` – Visit count per store
 - `GET /api/store-visits/statistics/store-visit-heatmap` – Visit data for heatmap
+  
 **Location Logs**
 - `GET /api/location-logs` – List all location logs
 - `POST /api/location-logs` – Add a location log
